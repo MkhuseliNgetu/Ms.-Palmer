@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.33529.622
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ms.Palmer", "Ms.Palmer.csproj", "{91D63CF6-7888-46C8-BA1C-E4DB03E5757C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6ED16D9E-1D96-468D-8F2E-4C48432B9375}"
+	ProjectSection(SolutionItems) = preProject
+		Logos\Ms. Palmer (Logo Version 2).png = Logos\Ms. Palmer (Logo Version 2).png
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{91D63CF6-7888-46C8-BA1C-E4DB03E5757C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91D63CF6-7888-46C8-BA1C-E4DB03E5757C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91D63CF6-7888-46C8-BA1C-E4DB03E5757C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91D63CF6-7888-46C8-BA1C-E4DB03E5757C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F9F00D06-F932-4389-9513-7E39A51303FB}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,62 @@
+﻿<Window x:Class="Ms.Palmer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Ms.Palmer"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="600" Width="800" Icon="Icon.png"
+        WindowStyle="None"
+        Background="Transparent"
+        AllowsTransparency="True"
+        WindowStartupLocation="CenterScreen">
+    <Grid x:Name="Background" Background="Black">
+       
+         <Border CornerRadius="15"/>
+   
+        <Image x:Name="Logo" HorizontalAlignment="Left" Height="214" Margin="135,23,0,0" VerticalAlignment="Top" Width="532" Source="Ms. Palmer (Logo Version 3 Dark).png"/>
+        <Button x:Name="UseCaseOne" Content="" HorizontalAlignment="Left" Margin="179,310,0,0" VerticalAlignment="Top" Width="186" Height="91" Click="UseCaseOne_Click">
+            <Button.Background>
+                <ImageBrush ImageSource="UseCaseOne (Version 2).png" Stretch="Uniform"/>
+            </Button.Background>
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="15"/>
+                </Style>
+            </Button.Resources>
+        </Button>
+        <Button x:Name="UseCaseTwo" Content="" HorizontalAlignment="Left" Margin="435,310,0,0" VerticalAlignment="Top" Width="203" Height="91" Click="UseCaseTwo_Click">
+            <Button.Background>
+                <ImageBrush ImageSource="UseCaseTwo (Version 2).png" Stretch="Uniform"/>
+            </Button.Background>
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="15"/>
+                </Style>
+            </Button.Resources>
+        </Button>
+        <Button x:Name="UseCaseThree" Content="" HorizontalAlignment="Left" Margin="179,435,0,0" VerticalAlignment="Top" Width="186" Height="91" Click="UseCaseThree_Click">
+            <Button.Background>
+                <ImageBrush ImageSource="UseCaseThree (Version 2).png" Stretch="Uniform"/>
+            </Button.Background>
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="15"/>
+                </Style>
+            </Button.Resources>
+        </Button>
+        <Button x:Name="UseCaseFour" Content="" HorizontalAlignment="Left" Margin="441,435,0,0" VerticalAlignment="Top" Width="197" Height="91" RenderTransformOrigin="0.209,0.557" Click="UseCaseFour_Click">
+            <Button.Background>
+                <ImageBrush ImageSource="UseCaseFour (Version 2).png" Stretch="Uniform"/>
+            </Button.Background>
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="15"/>
+                </Style>
+            </Button.Resources>
+        </Button>
+        <CheckBox x:Name="VirtualizationStatus" Content="CheckBox" HorizontalAlignment="Left" Margin="120,248,0,0" VerticalAlignment="Top" Height="44" Width="245" HorizontalContentAlignment="Center" Initialized="VirtualizationStatus_Initialized"/>
+        <CheckBox x:Name="HyperVisorStatus" Content="CheckBox" HorizontalAlignment="Left" Margin="435,248,0,0" VerticalAlignment="Top" Height="44" Width="229" HorizontalContentAlignment="Center" Initialized="HyperVisorStatus_Initialized"/>
+
+    </Grid>
+</Window>
