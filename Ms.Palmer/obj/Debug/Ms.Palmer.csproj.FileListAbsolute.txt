@@ -3,17 +3,17 @@ C:\Users\BraJo\source\repos\Ms.Palmer\bin\Debug\Ms.Palmer.exe
 C:\Users\BraJo\source\repos\Ms.Palmer\bin\Debug\Ms.Palmer.pdb
 C:\Users\BraJo\source\repos\Ms.Palmer\obj\Debug\Ms.Palmer.csproj.AssemblyReference.cache
 C:\Users\BraJo\source\repos\Ms.Palmer\obj\Debug\MainWindow.g.cs
+C:\Users\BraJo\source\repos\Ms.Palmer\obj\Debug\VM Config.g.cs
+C:\Users\BraJo\source\repos\Ms.Palmer\obj\Debug\VM Report.g.cs
 C:\Users\BraJo\source\repos\Ms.Palmer\obj\Debug\App.g.cs
 C:\Users\BraJo\source\repos\Ms.Palmer\obj\Debug\Ms.Palmer_MarkupCompile.cache
 C:\Users\BraJo\source\repos\Ms.Palmer\obj\Debug\Ms.Palmer_MarkupCompile.lref
 C:\Users\BraJo\source\repos\Ms.Palmer\obj\Debug\MainWindow.baml
+C:\Users\BraJo\source\repos\Ms.Palmer\obj\Debug\VM Config.baml
+C:\Users\BraJo\source\repos\Ms.Palmer\obj\Debug\VM Report.baml
 C:\Users\BraJo\source\repos\Ms.Palmer\obj\Debug\Ms.Palmer.g.resources
 C:\Users\BraJo\source\repos\Ms.Palmer\obj\Debug\Ms.Palmer.Properties.Resources.resources
 C:\Users\BraJo\source\repos\Ms.Palmer\obj\Debug\Ms.Palmer.csproj.GenerateResource.cache
 C:\Users\BraJo\source\repos\Ms.Palmer\obj\Debug\Ms.Palmer.csproj.CoreCompileInputs.cache
 C:\Users\BraJo\source\repos\Ms.Palmer\obj\Debug\Ms.Palmer.exe
 C:\Users\BraJo\source\repos\Ms.Palmer\obj\Debug\Ms.Palmer.pdb
-C:\Users\BraJo\source\repos\Ms.Palmer\obj\Debug\LoadingScreen.g.cs
-C:\Users\BraJo\source\repos\Ms.Palmer\obj\Debug\LoadingScreen.baml
-C:\Users\BraJo\source\repos\Ms.Palmer\obj\Debug\VM Config.g.cs
-C:\Users\BraJo\source\repos\Ms.Palmer\obj\Debug\VM Config.baml

@@ -38,6 +38,8 @@ namespace Ms.Palmer
 
             SetupInstallScript = new VM_Config();
 
+           
+
         }
 
         private Boolean CheckVirtualizationStatus()
@@ -189,36 +191,6 @@ namespace Ms.Palmer
             return IsHypervisorPresent;
         }
 
-
-        private void VirtualizationStatus_Loaded(object sender, RoutedEventArgs e)
-        {
-
-            if (IsVirtualizationEnabled)
-            {
-                
-
-                VirtualizationStatus.Content = "Virtualization Status: Enabled";
-                VirtualizationStatus.IsChecked = true;
-               
-            }
-            else
-            {
-                VirtualizationStatus.Content = "Virtualization Status:Disabled";
-                VirtualizationStatus.IsChecked = false;
-
-                UseCaseOne.IsEnabled = false;
-                UseCaseTwo.IsEnabled = false;
-                UseCaseThree.IsEnabled = false;
-                UseCaseFour.IsEnabled = false;
-
-            }
-        }
-
-        private void HyperVisorStatus_Loaded(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void UseCaseOne_Click(object sender, RoutedEventArgs e)
         {
            
@@ -255,12 +227,42 @@ namespace Ms.Palmer
 
         private void HyperVisorStatus_Initialized(object sender, EventArgs e)
         {
+            if (IsHypervisorPresent)
+            {
 
+
+                HyperVisorStatus.Content = "Hypervisor Status: Enabled";
+                HyperVisorStatus.IsChecked = true;
+
+            }
+            else
+            {
+                HyperVisorStatus.Content = "Hypervisor Status: Disabled";
+                HyperVisorStatus.IsChecked = false;
+
+                
+
+            }
         }
 
         private void VirtualizationStatus_Initialized(object sender, EventArgs e)
         {
+            if (IsVirtualizationEnabled)
+            {
 
+
+                VirtualizationStatus.Content = "Virtualization Status: Enabled";
+                VirtualizationStatus.IsChecked = true;
+
+            }
+            else
+            {
+                VirtualizationStatus.Content = "Virtualization Status: Disabled";
+                VirtualizationStatus.IsChecked = false;
+
+                
+
+            }
         }
     }
 

@@ -12,9 +12,51 @@
         WindowStartupLocation="CenterScreen">
     <Grid x:Name="Background" Background="Black">
 
-        <Border CornerRadius="15"/>
+        <Border CornerRadius="15" Margin="0,10,0,-10">
+           
+
+
+        </Border>
+        <Label Content="Choose a operating system" Margin="274,195,236,539" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Arial" FontWeight="Bold" FontSize="16" TextOptions.TextHintingMode="Fixed"/>
+
+        <ComboBox x:Name="OperatingSystemType" Margin="290,261,252,486" Loaded="OperatingSystemType_Loaded" FontWeight="Bold" FontFamily="Arial" FontSize="16" TextOptions.TextHintingMode="Fixed" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" SelectionChanged="OperatingSystemType_SelectionChanged" BorderThickness="1">
+            <ComboBox.Background>
+                <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                    <GradientStop Color="#FFF0F0F0" Offset="0"/>
+                    <GradientStop Color="White" Offset="1"/>
+                </LinearGradientBrush>
+            </ComboBox.Background>
+        </ComboBox>
 
         <Image x:Name="Logo" HorizontalAlignment="Left" Height="202" Margin="145,10,0,0" VerticalAlignment="Top" Width="532" Source="Ms. Palmer (Logo Version 3 Dark).png"/>
-        
+        <TextBox x:Name="VMUsername" HorizontalAlignment="Left" Height="62" Margin="258,380,0,0" TextWrapping="Wrap" Text="Enter a username" VerticalAlignment="Top" Width="318" RenderTransformOrigin="0.5,0.5" TextInput="VMUsername_TextInput" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontFamily="Arial" FontSize="16" FontWeight="Bold" FontStyle="Oblique" TextOptions.TextHintingMode="Fixed">
+            <TextBox.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="-0.348"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </TextBox.RenderTransform>
+        </TextBox>
+        <PasswordBox x:Name="VMPassword" Margin="245,500,216,262" TextInput="VMPassword_TextInput" TextOptions.TextHintingMode="Fixed" MaxLength="15" AutomationProperties.HelpText="Enter a password" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <RadioButton x:Name="InstallGuestAdditions" Margin="184,567,156,194" Content="Install VirtualBox Guest Additions (Improves Performance)" TextOptions.TextHintingMode="Fixed" FontWeight="Bold" FontSize="16" Foreground="White" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Checked="InstallGuestAdditions_Checked" />
+        <TextBox x:Name="OSKey" HorizontalAlignment="Left" Height="41" Margin="290,631,0,0" TextWrapping="Wrap" Text="Enter a Window's License (Optional)" VerticalAlignment="Top" Width="252" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontFamily="Arial" FontWeight="Bold" Loaded="OSKey_Loaded"/>
+        <Button x:Name="DeployVM" Content="" HorizontalAlignment="Left" Margin="274,696,0,0" VerticalAlignment="Top" Width="274" Height="76" Click="DeployVM_Click" RenderTransformOrigin="0.533,0.974">
+            <Button.Background>
+                <ImageBrush ImageSource="Deploy Virtual Machine ImageButton.png"/>
+            </Button.Background>
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="15"/>
+                </Style>
+            </Button.Resources>
+        </Button>
+        <ComboBox x:Name="VMSize" HorizontalAlignment="Left" Margin="612,261,0,0" VerticalAlignment="Top" Width="157" Height="53" Loaded="VMSize_Loaded_1" FontWeight="Bold" FontFamily="Arial" FontSize="16" TextOptions.TextHintingMode="Fixed"/>
+        <Label Content=" Virtual Machine Size" Margin="584,200,10,539" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Arial" FontWeight="Bold" FontSize="16" TextOptions.TextHintingMode="Fixed"/>
+        <Label Content="Enter a username" Margin="274,314,236,420" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Arial" FontWeight="Bold" FontSize="16" TextOptions.TextHintingMode="Fixed"/>
+        <Label Content="Enter a password" Margin="274,434,236,300" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Arial" FontWeight="Bold" FontSize="16" TextOptions.TextHintingMode="Fixed"/>
+
+
     </Grid>
 </Window>

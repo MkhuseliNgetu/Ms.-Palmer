@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("my-img8bit-com-effect%20(1).jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("exit%20imagebutton.png")]
 
 

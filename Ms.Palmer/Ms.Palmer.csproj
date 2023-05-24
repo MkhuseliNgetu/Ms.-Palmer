@@ -60,10 +60,9 @@
     <Compile Include="VM Config.xaml.cs">
       <DependentUpon>VM Config.xaml</DependentUpon>
     </Compile>
-    <Page Include="LoadingScreen.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+    <Compile Include="VM Report.xaml.cs">
+      <DependentUpon>VM Report.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -72,14 +71,15 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="LoadingScreen.xaml.cs">
-      <DependentUpon>LoadingScreen.xaml</DependentUpon>
-    </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Page Include="VM Config.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="VM Report.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -133,6 +133,15 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Deploy Virtual Machine ImageButton.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="OpenHypervisor ImageButton.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Exit ImageButton.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

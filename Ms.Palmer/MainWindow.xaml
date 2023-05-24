@@ -11,11 +11,11 @@
         AllowsTransparency="True"
         WindowStartupLocation="CenterScreen">
     <Grid x:Name="Background" Background="Black">
-       
-         <Border CornerRadius="15"/>
-   
+
+        <Border CornerRadius="15"/>
+
         <Image x:Name="Logo" HorizontalAlignment="Left" Height="214" Margin="135,23,0,0" VerticalAlignment="Top" Width="532" Source="Ms. Palmer (Logo Version 3 Dark).png"/>
-        <Button x:Name="UseCaseOne" Content="" HorizontalAlignment="Left" Margin="179,310,0,0" VerticalAlignment="Top" Width="186" Height="91" Click="UseCaseOne_Click">
+        <Button x:Name="UseCaseOne" Content="" HorizontalAlignment="Left" Margin="135,310,0,0" VerticalAlignment="Top" Width="186" Height="91" Click="UseCaseOne_Click">
             <Button.Background>
                 <ImageBrush ImageSource="UseCaseOne (Version 2).png" Stretch="Uniform"/>
             </Button.Background>
@@ -35,7 +35,7 @@
                 </Style>
             </Button.Resources>
         </Button>
-        <Button x:Name="UseCaseThree" Content="" HorizontalAlignment="Left" Margin="179,435,0,0" VerticalAlignment="Top" Width="186" Height="91" Click="UseCaseThree_Click">
+        <Button x:Name="UseCaseThree" Content="" HorizontalAlignment="Left" Margin="135,435,0,0" VerticalAlignment="Top" Width="186" Height="91" Click="UseCaseThree_Click">
             <Button.Background>
                 <ImageBrush ImageSource="UseCaseThree (Version 2).png" Stretch="Uniform"/>
             </Button.Background>
@@ -55,8 +55,8 @@
                 </Style>
             </Button.Resources>
         </Button>
-        <CheckBox x:Name="VirtualizationStatus" Content="CheckBox" HorizontalAlignment="Left" Margin="120,248,0,0" VerticalAlignment="Top" Height="44" Width="245" HorizontalContentAlignment="Center" Initialized="VirtualizationStatus_Initialized"/>
-        <CheckBox x:Name="HyperVisorStatus" Content="CheckBox" HorizontalAlignment="Left" Margin="435,248,0,0" VerticalAlignment="Top" Height="44" Width="229" HorizontalContentAlignment="Center" Initialized="HyperVisorStatus_Initialized"/>
+        <CheckBox x:Name="VirtualizationStatus" Content="Virtualization Status: Unknown" HorizontalAlignment="Left" Margin="86,242,0,0" VerticalAlignment="Top" Height="44" Width="279" HorizontalContentAlignment="Center" Initialized="VirtualizationStatus_Initialized" Foreground="White" VerticalContentAlignment="Center" FontWeight="Bold" FontFamily="Arial" FontSize="16"/>
+        <CheckBox x:Name="HyperVisorStatus" Content="Hypervisor Status: Unknown" HorizontalAlignment="Left" Margin="435,242,0,0" VerticalAlignment="Top" Height="44" Width="255" HorizontalContentAlignment="Center" Initialized="HyperVisorStatus_Initialized" Foreground="White" FontFamily="Arial" FontWeight="Bold" FontSize="16" VerticalContentAlignment="Center"/>
 
     </Grid>
 </Window>
