@@ -29,7 +29,7 @@ namespace Ms.Palmer
 
         public MainWindow()
         {
-           
+
             InitializeComponent();
 
             CheckVirtualizationStatus();
@@ -38,7 +38,7 @@ namespace Ms.Palmer
 
             SetupInstallScript = new VM_Config();
 
-           
+
 
         }
 
@@ -60,7 +60,7 @@ namespace Ms.Palmer
             //Link: https://www.c-sharpcorner.com/UploadFile/2d2d83/how-to-start-a-process-like-cmd-window-using-C-Sharp/
             //Author: Aman
             //Author Profile Link:https://www.c-sharpcorner.com/members/aman2
-            NewProcess.WorkingDirectory =@"C:\";
+            NewProcess.WorkingDirectory = @"C:\";
 
             NewProcess.Arguments = " /C systeminfo";
 
@@ -84,14 +84,14 @@ namespace Ms.Palmer
 
             try
             {
-            
+
                 if (StartCheck.Start())
                 {
 
-                    foreach(var Line in StartCheck.StandardOutput.ReadToEnd())
+                    foreach (var Line in StartCheck.StandardOutput.ReadToEnd())
                     {
 
-                        if(Line.ToString().Contains("A hypervisor has been detected"))
+                        if (Line.ToString().Contains("A hypervisor has been detected"))
                         {
 
                             IsVirtualizationEnabled = true;
@@ -105,13 +105,14 @@ namespace Ms.Palmer
                 {
                     IsVirtualizationEnabled = false;
                 }
-            }catch(Exception VirtulizationStatusNotFound)
+            }
+            catch (Exception VirtulizationStatusNotFound)
 
             {
 
-                
+
             }
-           
+
 
 
             return IsVirtualizationEnabled;
@@ -159,10 +160,10 @@ namespace Ms.Palmer
 
             try
             {
-               
+
                 if (StartCheck.Start())
                 {
-               
+
                     foreach (var Line in StartCheck.StandardOutput.ReadToEnd())
                     {
 
@@ -193,12 +194,12 @@ namespace Ms.Palmer
 
         private void UseCaseOne_Click(object sender, RoutedEventArgs e)
         {
-           
+
             SetupInstallScript.Show();
 
             this.Hide();
             this.Close();
-            
+
         }
 
         private void UseCaseTwo_Click(object sender, RoutedEventArgs e)
@@ -240,7 +241,7 @@ namespace Ms.Palmer
                 HyperVisorStatus.Content = "Hypervisor Status: Disabled";
                 HyperVisorStatus.IsChecked = false;
 
-                
+
 
             }
         }
@@ -260,36 +261,11 @@ namespace Ms.Palmer
                 VirtualizationStatus.Content = "Virtualization Status: Disabled";
                 VirtualizationStatus.IsChecked = false;
 
-                
+
 
             }
         }
     }
 
-    public class TreeNode<String>
-    {
-
-        public string UserInput { get; set; }
-
-        public TreeNode<string> Root { get; set; }
-
-        public TreeNode<string> UseCases { get; set; }
-
-        public TreeNode<string> UseCasesLeft { get; set; }
-
-        public TreeNode<string> UseCasesRight { get; set; }
-        public TreeNode<string> AddUseCase(string Type)
-        {
-            Root = new TreeNode<string>() { UserInput = "Virtual Machine" };
-
-            Root.UseCases = new TreeNode<string>() { UserInput = "Virtual Machine Type" };
-
-            //Root.UseCases.UseCasesLeft = new TreeNode<string>() { UserInput = "Work" };
-
-            //Root.UseCases.UseCasesRight = new TreeNode<string>() { UserInput = "Gaming" };
-                 
-            return Root;
-        }
-
-    }
+    
 }
