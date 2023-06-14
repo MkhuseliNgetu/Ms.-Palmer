@@ -20,117 +20,12 @@ namespace Ms.Palmer
     /// Interaction logic for VM_Config.xaml
     /// </summary>
     /// 
-    public class TreeNode<String>
-    {
-        public TreeNode<string> Root;
-        public LinkedList<TreeNode<string>> Children;
-        private string useCase;
-
-        public TreeNode(string useCase)
-        {
-            this.useCase = useCase;
-        }
-
-        public TreeNode<string> AddConfig(string UseCase)
-        {
-            if (UseCase != null)
-            {
-                this.Root = new TreeNode<string>(UseCase);
-            }
-            else
-            {
-                throw new Exception("A Virtual Machines needs to have a use case");
-            }
-            return Root;
-        }
-
-        public LinkedList<TreeNode<string>> SetupChildren()
-        {
-            Children = new LinkedList<TreeNode<string>>();
-
-            return Children;
-        }
-
-        public LinkedList<TreeNode<string>> AddUsernameAndPassCode(string Username, string Passcode)
-        {
-
-            if (Username != null && Passcode != null)
-            {
-
-                TreeNode<string> UserName = new TreeNode<string>(Username);
-                TreeNode<string> PassCode = new TreeNode<string>(Passcode);
-
-                if (Children.Count == 0)
-                {
-
-                    Children.AddFirst(UserName);
-                    Children.Append(PassCode);
-                }
-
-            }
-            else
-            {
-                throw new Exception("A Virtual Machines needs to have a username and password");
-            }
-
-            return Children;
-        }
-        public LinkedList<TreeNode<string>> AddKey(string OsKey)
-        {
-
-            if (OsKey != null)
-            {
-                TreeNode<string> OperatingSystemKey = new TreeNode<string>(OsKey);
-
-                if (Children.Count == 2)
-                {
-                    Children.Append(OperatingSystemKey);
-                }
-
-            }
-            else
-            {
-                throw new Exception("A Virtual Machines needs to have a license/key to proceed");
-            }
-
-            return Children;
-        }
-        public LinkedList<TreeNode<string>> SetAdditions(string AreAdditionsNeeded)
-        {
-
-            if (AreAdditionsNeeded != null)
-            {
-
-                TreeNode<string> GuestAddtions = new TreeNode<string>(AreAdditionsNeeded);
-
-
-                if (Children.ElementAt(3) == null)
-                {
-                    Children.Append(GuestAddtions);
-                }
-                else if (Children.ElementAt(4) == null)
-                {
-                    Children.Append(GuestAddtions);
-                }
-
-            }
-            else
-            {
-                throw new Exception("A Virtual Machines needs to have a license/key to proceed");
-            }
-            return Children;
-        }
-
-    }
     public partial class VM_Config : Window
     {
 
         private String VirtualMachineInstallScriptName = "PalmerInstallScript.txt";
-
         private String VirtualMachineInstallScriptLocation = "";
-
         private String VirtualBoxUnattendedInstallTemplate = "VirtualBox VM Unattended Install Template (Credit To Valery Portnyagin).txt";
-
         private String VirtualBoxUnattendedInstallTemplateLocation = "";
 
 
@@ -139,15 +34,122 @@ namespace Ms.Palmer
         private bool IsGuestAddtionsSet;
 
         private VM_Report VMReport;
-        private TreeNode<string> VM;
+        public Stack<String> VM;
 
-        private String Line;
+        private List<String> Line;
         private WebClient ISODownloader;
-        public VM_Config()
+        public VM_Config(String VMUseCase)
         {
             InitializeComponent();
 
             CreateInstallScript();
+
+            Line = new List<String>();
+
+        }
+
+        public Stack<String> StartConfig(string OperatingSystem)
+        {
+
+            VM = new Stack<string>();
+            if (OperatingSystem != null)
+            {
+                VM.Push(OperatingSystem);
+            }
+            else
+            {
+                throw new Exception("A Virtual Machines needs to have a use case");
+            }
+            return VM;
+        }
+        public Stack<String> AddUsernameAndPassCode(string Username, string Passcode)
+        {
+
+            if (Username != null && Passcode != null)
+            {
+                VM.Push(Username);
+                VM.Push(Passcode);
+            }
+            else
+            {
+                throw new Exception("A Virtual Machines needs to have a username and password");
+            }
+
+            return VM;
+        }
+        public Stack<String> AddKey(string OsKey)
+        {
+
+            if (OsKey != null)
+            {
+                VM.Push(OsKey);
+            }
+            else
+            {
+                throw new Exception("A Virtual Machines needs to have a license/key to proceed");
+            }
+
+            return VM;
+        }
+        public Stack<String> SetAdditions(string AreAdditionsNeeded)
+        {
+
+            if (AreAdditionsNeeded != null)
+            {
+
+                if (VM.Count == 4)
+                {
+                    VM.Push(AreAdditionsNeeded);
+                }
+                else if (VM.Count == 4)
+                {
+                    VM.Push(AreAdditionsNeeded);
+                }
+
+            }
+            else
+            {
+                throw new Exception("A Virtual Machines needs to have a license/key to proceed");
+            }
+            return VM;
+        }
+
+        private void VMSize_Loaded_1(object sender, RoutedEventArgs e)
+        {
+            DefaultVMSizes[0] = 30;
+            DefaultVMSizes[1] = 60;
+            DefaultVMSizes[2] = 90;
+            DefaultVMSizes[3] = 120;
+            DefaultVMSizes[4] = 256;
+
+            foreach (int VMSizes in DefaultVMSizes)
+            {
+
+                VMSize.Items.Add(VMSizes.ToString() + "Gb");
+
+                if (VMSize.Items.Count.Equals(5))
+                {
+                    VMSize.Items.Add("Other...");
+                }
+            }
+        }
+
+        private void VMPassword_TextInput(object sender, TextCompositionEventArgs e)
+        {
+
+        }
+
+        private void VMUsername_TextInput(object sender, TextCompositionEventArgs e)
+        {
+
+        }
+        private void OSKey_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void InstallGuestAdditions_Checked(object sender, RoutedEventArgs e)
+        {
 
         }
 
@@ -201,18 +203,7 @@ namespace Ms.Palmer
                         File.AppendAllText(@VirtualMachineInstallScriptLocation, LineFromFile);
                     }
 
-                    //Adding User Parameters
-                   /* using (StreamReader ReadTheInstallScript = File.OpenText(VirtualMachineInstallScriptLocation))
-                    {
-
-                        while (ReadTheInstallScript.Read() > 0)
-                        {
-                            var Line = ReadTheInstallScript.ReadLine();
-
-                            File.AppendAllLines(@VirtualMachineInstallScriptLocation, Line.Split('\n'));
-
-                        }
-                    }*/
+                 
 
                     break;
             }
@@ -234,16 +225,6 @@ namespace Ms.Palmer
             }
 
            
-        }
-
-        private void VMPassword_TextInput(object sender, TextCompositionEventArgs e)
-        {
-
-        }
-
-        private void VMUsername_TextInput(object sender, TextCompositionEventArgs e)
-        {
-
         }
 
         private void OperatingSystemType_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -269,212 +250,179 @@ namespace Ms.Palmer
             }
         }
 
-        private void DeployVMButton_Click(object sender, RoutedEventArgs e)
-        {
 
-           
-        }
-
-        private void OSKey_Loaded(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void InstallGuestAdditions_Checked(object sender, RoutedEventArgs e)
-        {
-
-        }
 
         private void DeployVM_Click(object sender, RoutedEventArgs e)
         {
-            VMReport = new VM_Report();
+           
 
 
             switch (OperatingSystemType.SelectedItem)
             {
                 case "Windows 10":
-                    break;
-                case "Ubuntu":
-                    VM = new TreeNode<string>("Ubuntu");
 
-                    VM.SetupChildren();
+                    StartConfig(OperatingSystemType.SelectedItem.ToString());
 
-                    VM.AddConfig(OperatingSystemType.SelectedItem.ToString());
+                    AddUsernameAndPassCode(VMUsername.Text, VMPassword.Password);
 
-                    VM.AddUsernameAndPassCode(VMUsername.Text, VMPassword.Password);
+                    AddKey(OSKey.Text);
 
                     if (InstallGuestAdditions.IsChecked == true)
                     {
                         IsGuestAddtionsSet = true;
-                        //VM.SetAdditions(IsGuestAddtionsSet.ToString());
+                        SetAdditions(IsGuestAddtionsSet.ToString());
                     }
                     else
                     {
                         IsGuestAddtionsSet = false;
-                        //VM.SetAdditions(IsGuestAddtionsSet.ToString());
+                        SetAdditions(IsGuestAddtionsSet.ToString());
+                    }
+                    break;
+                case "Ubuntu":
+
+                    StartConfig(OperatingSystemType.SelectedItem.ToString());
+
+                    AddUsernameAndPassCode(VMUsername.Text, VMPassword.Password);
+
+                    AddKey("N/A");
+
+                    if (InstallGuestAdditions.IsChecked == true)
+                    {
+                        IsGuestAddtionsSet = true;
+                        SetAdditions(IsGuestAddtionsSet.ToString());
+                    }
+                    else
+                    {
+                        IsGuestAddtionsSet = false;
+                        SetAdditions(IsGuestAddtionsSet.ToString());
                     }
 
 
                     break;
                 case "Fedora":
-                    VM = new TreeNode<string>("Fedora");
 
-                    VM.SetupChildren();
+                    StartConfig(OperatingSystemType.SelectedItem.ToString());
 
-                    VM.AddConfig(OperatingSystemType.SelectedItem.ToString());
+                    AddUsernameAndPassCode(VMUsername.Text, VMPassword.Password);
 
-                    VM.AddUsernameAndPassCode(VMUsername.Text, VMPassword.Password);
+                    AddKey("N/A");
 
                     if (InstallGuestAdditions.IsChecked == true)
                     {
                         IsGuestAddtionsSet = true;
-                       //VM.SetAdditions(IsGuestAddtionsSet.ToString());
+                        SetAdditions(IsGuestAddtionsSet.ToString());
                     }
                     else
                     {
                         IsGuestAddtionsSet = false;
-                        //VM.SetAdditions(IsGuestAddtionsSet.ToString());
+                        SetAdditions(IsGuestAddtionsSet.ToString());
                     }
+
                     break;
                 case "Pop OS":
-                    VM = new TreeNode<string>("Pop OS");
 
-                    VM.SetupChildren();
+                    StartConfig(OperatingSystemType.SelectedItem.ToString());
 
-                    VM.AddConfig(OperatingSystemType.SelectedItem.ToString());
+                    AddUsernameAndPassCode(VMUsername.Text, VMPassword.Password);
 
-                    VM.AddUsernameAndPassCode(VMUsername.Text, VMPassword.Password);
+                    AddKey("N/A");
 
                     if (InstallGuestAdditions.IsChecked == true)
                     {
                         IsGuestAddtionsSet = true;
-                        //VM.SetAdditions(IsGuestAddtionsSet.ToString());
+                        SetAdditions(IsGuestAddtionsSet.ToString());
                     }
                     else
                     {
                         IsGuestAddtionsSet = false;
-                        //VM.SetAdditions(IsGuestAddtionsSet.ToString());
+                        SetAdditions(IsGuestAddtionsSet.ToString());
                     }
+
                     break;
                 case "Linux Mint":
-                    VM = new TreeNode<string>("Linux Mint");
 
-                    VM.SetupChildren();
+                    StartConfig(OperatingSystemType.SelectedItem.ToString());
 
-                    VM.AddConfig(OperatingSystemType.SelectedItem.ToString());
+                    AddUsernameAndPassCode(VMUsername.Text, VMPassword.Password);
 
-                    VM.AddUsernameAndPassCode(VMUsername.Text, VMPassword.Password);
+                    AddKey("N/A");
 
                     if (InstallGuestAdditions.IsChecked == true)
                     {
                         IsGuestAddtionsSet = true;
-                        //VM.SetAdditions(IsGuestAddtionsSet.ToString());
+                        SetAdditions(IsGuestAddtionsSet.ToString());
                     }
                     else
                     {
                         IsGuestAddtionsSet = false;
-                        //VM.SetAdditions(IsGuestAddtionsSet.ToString());
+                        SetAdditions(IsGuestAddtionsSet.ToString());
                     }
+
                     break;
 
             }
 
             //Manipulate the script
-            using (StreamReader ReadTheInstallScript = File.OpenText(VirtualMachineInstallScriptLocation))
+            //Set Vm Name
+            Line.Add("<em> VBoxManage unattended install " + VM.ElementAt(4));
+            //Set Username and Password
+            Line.Add("[--user=" + VM.ElementAt(3) + "]");
+            Line.Add("[--password=" + VM.ElementAt(2) + "]");
+            //Set Key 
+            Line.Add("[--key="+ VM.ElementAt(1)+"]");
+            // Set Guest Additions
+            if (VM.ElementAt(0).Equals("true"))
             {
-
-                while (ReadTheInstallScript.Read() > 0)
+                Line.Add("[--install-additions" + VM.ElementAt(0) + "]");
+                
+                //Get Additions, if not present
+                using (ISODownloader = new WebClient())
                 {
-                    //Set Vm Name
-                    if (ReadTheInstallScript.Read().ToString().Contains("<em>VBoxManage unattended install <uuid|vmname>"))
+                    ISODownloader.DownloadFile("http://download.virtualbox.org/virtualbox/7.0.8/VBoxGuestAdditions_7.0.8.iso", "VirtualBoxGuestAdditions(Latest).iso");
+
+                    if (ISODownloader.IsBusy)
                     {
-                        Line = ReadTheInstallScript.ReadLine();
-
-                        Line.Replace("<em>VBoxManage unattended install <uuid|vmname>", "<em> VBoxManage unattended install" + VM.Root.ToString());
-
-                        File.WriteAllText(VirtualMachineInstallScriptLocation, Line);
-
-                    }
-                    //Set Username and Password
-                    if (ReadTheInstallScript.Read().ToString().Contains("[--user=login]"))
-                    {
-                        Line = ReadTheInstallScript.ReadLine();
-
-                        Line.Replace("[--user=login]", "user =" + VM.Children.ElementAt(0));
-
-                        File.WriteAllText(VirtualMachineInstallScriptLocation, Line);
-
-                        if (ReadTheInstallScript.Read().ToString().Contains("[--password=password]"))
-                        {
-                            Line = ReadTheInstallScript.ReadLine();
-
-                            Line.Replace("[--password=password]", "password =" + VM.Children.ElementAt(1));
-
-                            File.WriteAllText(VirtualMachineInstallScriptLocation, Line);
-                        }
-                    }
-                    //Set Key
-                    if (ReadTheInstallScript.Read().ToString().Contains("[--key=product-key]"))
-                    {
-                        Line = ReadTheInstallScript.ReadLine();
-
-                        Line.Replace("[--key=product-key]", "productKey =" + VM.Children.ElementAt(3));
-
-                        File.WriteAllText(VirtualMachineInstallScriptLocation, Line);
-                    }
-                    // Set Guest Additions
-                    if (ReadTheInstallScript.Read().ToString().Contains("[--install-additions]"))
-                    {
-                        Line = ReadTheInstallScript.ReadLine();
-
-                        //Get Additions, if not present
-                        using (ISODownloader = new WebClient())
-                        {
-                            ISODownloader.DownloadFile("http://download.virtualbox.org/virtualbox/7.0.8/VBoxGuestAdditions_7.0.8.iso", "VirtualBoxGuestAdditions(Latest).iso");
-
-                            if (ISODownloader.IsBusy)
-                            {
-                                //Insert Measurement bar
-                            }
-                            
-                        }
-
-                        //Line.Replace("[--install-additions]", "installGuestAdditions =" + VM.Children.ElementAt(3));
-
+                        //Insert Measurement bar
                     }
 
-
-                    //File.AppendAllLines(@VirtualMachineInstallScriptLocation, Line.Split('\n'));
 
                 }
+            }
+            else if (VM.ElementAt(0).Equals("false"))
+            {
 
-                ReadTheInstallScript.Dispose();
+                Line.Add("[--install-additions" + VM.ElementAt(0) + "]");
+              
             }
 
+            using (FileStream OpenInstallScript = new FileStream(VirtualMachineInstallScriptLocation, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
+            {
+                
+                using(StreamReader ReadTheScript = new StreamReader(OpenInstallScript))
+                using (StreamWriter WriteToScript = new StreamWriter(OpenInstallScript))
+                {
+                    var AllData = ReadTheScript.ReadToEnd();
+
+                    OpenInstallScript.SetLength(0);
+
+                     foreach (String ConfigLine in Line)
+                    {
+                         WriteToScript.WriteLine(ConfigLine);
+
+                    }
+
+                    WriteToScript.WriteLine("</em>");
+
+                }
+            }
+
+            VMReport = new VM_Report(VM);
             VMReport.Show();
             this.Hide();
             this.Close();
           
         }
 
-        private void VMSize_Loaded_1(object sender, RoutedEventArgs e)
-        {
-            DefaultVMSizes[0] = 30;
-            DefaultVMSizes[1] = 60;
-            DefaultVMSizes[2] = 90;
-            DefaultVMSizes[3] = 120;
-            DefaultVMSizes[4] = 256;
-
-            foreach (int VMSizes in DefaultVMSizes)
-            {
-
-                VMSize.Items.Add(VMSizes.ToString().Append('G').Append('B'));
-
-                if (VMSize.Items.Count.Equals(5))
-                {
-                    VMSize.Items.Add("Other...");
-                }
-            }
-        }
+      
     }
 }

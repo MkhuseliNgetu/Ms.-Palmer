@@ -36,9 +36,13 @@ namespace Ms.Palmer
 
             CheckHypervisors();
 
-            SetupInstallScript = new VM_Config();
+            UseCaseOne.Content = "Gaming";
 
+            UseCaseTwo.Content = "Education";
 
+            UseCaseThree.Content = "Work";
+
+            UseCaseFour.Content = "Entertainment";
 
         }
 
@@ -107,10 +111,9 @@ namespace Ms.Palmer
                 }
             }
             catch (Exception VirtulizationStatusNotFound)
-
             {
 
-
+                //throw new Exception("Virtualization Status could not be determined due to virtualization technologies (AMD-V, Intel VT-D) not being enabled in the BIOS.");
             }
 
 
@@ -136,9 +139,9 @@ namespace Ms.Palmer
             //Link: https://www.c-sharpcorner.com/UploadFile/2d2d83/how-to-start-a-process-like-cmd-window-using-C-Sharp/
             //Author: Aman
             //Author Profile Link:https://www.c-sharpcorner.com/members/aman2
-            CheckAvailableHyperVisors.WorkingDirectory = @"C:\PROGRA~1";
+            CheckAvailableHyperVisors.WorkingDirectory = @"C:\";
 
-            CheckAvailableHyperVisors.Arguments = "DIR Oracle";
+            CheckAvailableHyperVisors.Arguments = "cd /PROGRA~1 && DIR Oracle";
 
             //This programming statement was adapted from StackOverflow:
             //Link: https://stackoverflow.com/questions/3440105/hide-command-window-in-c-sharp-application
@@ -183,10 +186,9 @@ namespace Ms.Palmer
                 }
             }
             catch (Exception HyperVisorsNotFound)
-
             {
 
-
+                //throw new Exception(" A hypervisor was not found in this system. Please install a virtual machine hypervior and restart the program.");
             }
 
             return IsHypervisorPresent;
@@ -194,7 +196,7 @@ namespace Ms.Palmer
 
         private void UseCaseOne_Click(object sender, RoutedEventArgs e)
         {
-
+            SetupInstallScript = new VM_Config((string)UseCaseOne.Content);
             SetupInstallScript.Show();
 
             this.Hide();
@@ -204,6 +206,7 @@ namespace Ms.Palmer
 
         private void UseCaseTwo_Click(object sender, RoutedEventArgs e)
         {
+            SetupInstallScript = new VM_Config((string)UseCaseTwo.Content);
             SetupInstallScript.Show();
 
             this.Hide();
@@ -212,6 +215,7 @@ namespace Ms.Palmer
 
         private void UseCaseThree_Click(object sender, RoutedEventArgs e)
         {
+            SetupInstallScript = new VM_Config((string)UseCaseThree.Content);
             SetupInstallScript.Show();
 
             this.Hide();
@@ -220,48 +224,35 @@ namespace Ms.Palmer
 
         private void UseCaseFour_Click(object sender, RoutedEventArgs e)
         {
+            SetupInstallScript = new VM_Config((string)UseCaseFour.Content);
             SetupInstallScript.Show();
 
             this.Hide();
             this.Close();
         }
 
-        private void HyperVisorStatus_Initialized(object sender, EventArgs e)
+        private void VirtualizationStatus_Initialized_1(object sender, EventArgs e)
         {
-            if (IsHypervisorPresent)
+            if (IsVirtualizationEnabled == true)
             {
-
-
-                HyperVisorStatus.Content = "Hypervisor Status: Enabled";
-                HyperVisorStatus.IsChecked = true;
-
-            }
-            else
-            {
-                HyperVisorStatus.Content = "Hypervisor Status: Disabled";
-                HyperVisorStatus.IsChecked = false;
-
-
-
-            }
-        }
-
-        private void VirtualizationStatus_Initialized(object sender, EventArgs e)
-        {
-            if (IsVirtualizationEnabled)
-            {
-
 
                 VirtualizationStatus.Content = "Virtualization Status: Enabled";
-                VirtualizationStatus.IsChecked = true;
-
             }
             else
             {
                 VirtualizationStatus.Content = "Virtualization Status: Disabled";
-                VirtualizationStatus.IsChecked = false;
+            }
+        }
 
-
+        private void HyperVisorStatus_Initialized_1(object sender, EventArgs e)
+        {
+            if (IsHypervisorPresent == true)
+            {
+                HyperVisorStatus.Content = "Hypervisor Status: Hypervisors Found Successfully!";
+            }
+            else
+            {
+                HyperVisorStatus.Content = "Hypervisor Status:"+"\n"+"No Hypervisor's have been found";
 
             }
         }

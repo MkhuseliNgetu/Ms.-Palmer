@@ -1,9 +1,0 @@
-<em>VBoxManage unattended install <uuid|vmname>
-<--iso=install-iso> 
-[--user=login] 
-[--password=password] 
-[--key=product-key]  
-[--install-additions] 
-[--no-install-additions] 
-[--additions-iso=add-iso]  
-</em>

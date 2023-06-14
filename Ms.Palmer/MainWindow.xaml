@@ -12,9 +12,13 @@
         WindowStartupLocation="CenterScreen">
     <Grid x:Name="Background" Background="Black">
 
-        <Border CornerRadius="15"/>
+        <Border CornerRadius="15">
+            
+        </Border>
 
         <Image x:Name="Logo" HorizontalAlignment="Left" Height="214" Margin="135,23,0,0" VerticalAlignment="Top" Width="532" Source="Ms. Palmer (Logo Version 3 Dark).png"/>
+        <Label x:Name="VirtualizationStatus" Content="(Virtualization Status)" Margin="98,237,417,295" Initialized="VirtualizationStatus_Initialized_1" FontFamily="Arial" FontSize="16" FontWeight="Bold" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" TextOptions.TextHintingMode="Animated"/>
+        <Label x:Name="HyperVisorStatus" Content="(Hypervisor Status)" Margin="409,237,77,300" Initialized="HyperVisorStatus_Initialized_1" FontFamily="Arial" FontSize="16" FontWeight="Bold" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
         <Button x:Name="UseCaseOne" Content="" HorizontalAlignment="Left" Margin="135,310,0,0" VerticalAlignment="Top" Width="186" Height="91" Click="UseCaseOne_Click">
             <Button.Background>
                 <ImageBrush ImageSource="UseCaseOne (Version 2).png" Stretch="Uniform"/>
@@ -55,8 +59,7 @@
                 </Style>
             </Button.Resources>
         </Button>
-        <CheckBox x:Name="VirtualizationStatus" Content="Virtualization Status: Unknown" HorizontalAlignment="Left" Margin="86,242,0,0" VerticalAlignment="Top" Height="44" Width="279" HorizontalContentAlignment="Center" Initialized="VirtualizationStatus_Initialized" Foreground="White" VerticalContentAlignment="Center" FontWeight="Bold" FontFamily="Arial" FontSize="16"/>
-        <CheckBox x:Name="HyperVisorStatus" Content="Hypervisor Status: Unknown" HorizontalAlignment="Left" Margin="435,242,0,0" VerticalAlignment="Top" Height="44" Width="255" HorizontalContentAlignment="Center" Initialized="HyperVisorStatus_Initialized" Foreground="White" FontFamily="Arial" FontWeight="Bold" FontSize="16" VerticalContentAlignment="Center"/>
+       
 
     </Grid>
 </Window>

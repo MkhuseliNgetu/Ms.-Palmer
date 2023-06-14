@@ -20,12 +20,13 @@ namespace Ms.Palmer
     /// </summary>
     public partial class VM_Report : Window
     {
-        private VM_Config TreeConfig;
-        public VM_Report()
+
+        private Stack<String> PassedConfig;
+        public VM_Report(Stack<String> FullVMConfig)
         {
             InitializeComponent();
 
-            TreeConfig = new VM_Config();
+            PassedConfig = FullVMConfig;
         }
 
         private void OpenHypervisor_Click(object sender, RoutedEventArgs e)
@@ -48,9 +49,9 @@ namespace Ms.Palmer
             //Link: https://www.c-sharpcorner.com/UploadFile/2d2d83/how-to-start-a-process-like-cmd-window-using-C-Sharp/
             //Author: Aman
             //Author Profile Link:https://www.c-sharpcorner.com/members/aman2
-            OpenAvailableHyperVisors.WorkingDirectory = @"C:\PROGRA~1\Oracle\VirtualBox";
+            OpenAvailableHyperVisors.WorkingDirectory = @"C:\";
 
-            OpenAvailableHyperVisors.Arguments = "start VirtualBox";
+            OpenAvailableHyperVisors.Arguments = "cd /PROGRA~1/Oracle/VirtualBox && start VirtualBox";
 
             //This programming statement was adapted from StackOverflow:
             //Link: https://stackoverflow.com/questions/3440105/hide-command-window-in-c-sharp-application
@@ -80,6 +81,7 @@ namespace Ms.Palmer
             }catch (Exception FailedToOperHyperVisor)
             {
 
+                //throw new Exception("Could not open hypervisor: Hypervisor Error"); 
 
             }
         }
@@ -89,9 +91,18 @@ namespace Ms.Palmer
             System.Environment.Exit(0);
         }
 
-        private void VMConfigView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void VMConfigView1_Initialized(object sender, EventArgs e)
         {
-            
+            VMConfigView1.Text = "Your virutal machine has been configured suceessfully." +"\n";
+            VMConfigView1.AppendText("To use your virtual machine you can either click on 'Open Hypervisor' or close the application and open your hypervisor manually."+
+                                    "\n"+"Thank you for using Ms. Palmer.");
+
+            //Fix Bug
+            //for (int LC = PassedConfig.Count() - 1; LC >= 0; LC--)
+            //{
+
+            //    VMConfigView1.AppendText(PassedConfig.ElementAt(LC));
+            //}
         }
     }
 }

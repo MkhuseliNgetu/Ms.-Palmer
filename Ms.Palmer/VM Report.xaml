@@ -13,18 +13,12 @@
     <Grid x:Name="Background" Background="Black">
 
         <Border CornerRadius="15">
-            
+            <TextBox x:Name="VMConfigView1" TextWrapping="Wrap" Text="VM Report (Goes Here)" HorizontalAlignment="Left" Height="300" Margin="164,212,0,0" VerticalAlignment="Top" Width="513" FontFamily="Arial" FontWeight="Bold" FontSize="16" TextOptions.TextHintingMode="Fixed" Initialized="VMConfigView1_Initialized" Foreground="White" Background="#FF0E0A0A" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+
 
 
         </Border>
         <Image x:Name="Logo" HorizontalAlignment="Left" Height="202" Margin="145,10,0,0" VerticalAlignment="Top" Width="532" Source="Ms. Palmer (Logo Version 3 Dark).png"/>
-        <ListView x:Name="VMConfigView" HorizontalAlignment="Left" Height="300" Margin="164,212,0,0" VerticalAlignment="Top" Width="513" FontFamily="Arial" FontWeight="Bold" FontSize="16" TextOptions.TextHintingMode="Fixed" SelectionChanged="VMConfigView_SelectionChanged">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn/>
-                </GridView>
-            </ListView.View>
-        </ListView>
         <Button x:Name="OpenHypervisor" Content="" Margin="164,517,400,10" FontFamily="Arial" FontWeight="Bold" FontSize="16" TextOptions.TextHintingMode="Fixed" Click="OpenHypervisor_Click">
             <Button.Background>
                 <ImageBrush ImageSource="OpenHypervisor ImageButton.png"/>
