@@ -13,13 +13,25 @@
     <Grid x:Name="Background" Background="Black">
 
         <Border CornerRadius="15" Margin="0,10,0,-10">
+            <Label x:Name="SuggestedVMConfigQuery" Content="Suggested Config " Foreground="White" Margin="26,97,534,657" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontFamily="Arial" FontSize="16" FontWeight="Bold"/>
+
+
+
 
 
 
         </Border>
-        <Label Content="Choose a operating system" Margin="274,195,236,539" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Arial" FontWeight="Bold" FontSize="16" TextOptions.TextHintingMode="Fixed"/>
-
-        <ComboBox x:Name="OperatingSystemType" Margin="290,261,252,491" Loaded="OperatingSystemType_Loaded" FontWeight="Bold" FontFamily="Arial" FontSize="16" TextOptions.TextHintingMode="Fixed" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" SelectionChanged="OperatingSystemType_SelectionChanged" BorderThickness="1">
+        <Label Content="Select a operating system" Margin="274,100,236,634" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Arial" FontWeight="Bold" FontSize="16" TextOptions.TextHintingMode="Fixed"/>
+        <ListView x:Name="SuggestedVMConfigView" Margin="21,166,526,448" Background="Black" BorderBrush="Black" Foreground="White" Initialized="SuggestedVMConfigView_Initialized">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Label x:Name="ISOPathQuery" Content="ISO Path" HorizontalAlignment="Left" Height="44" Margin="318,198,0,0" VerticalAlignment="Top" Width="206" Foreground="White" FontFamily="Arial" FontWeight="Bold" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="16"/>
+        <TextBox x:Name="ISOPath" TextWrapping="Wrap" Margin="290,230,252,536" FontFamily="Arial" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="16" FontStyle="Italic" TextChanged="ISOPath_TextChanged"/>
+        <ComboBox x:Name="OperatingSystemType" Margin="290,166,252,602" Loaded="OperatingSystemType_Loaded" FontWeight="Bold" FontFamily="Arial" FontSize="16" TextOptions.TextHintingMode="Fixed" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" SelectionChanged="OperatingSystemType_SelectionChanged" BorderThickness="1">
             <ComboBox.Background>
                 <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                     <GradientStop Color="#FFF0F0F0" Offset="0"/>
@@ -28,8 +40,8 @@
             </ComboBox.Background>
         </ComboBox>
 
-        <Image x:Name="Logo" HorizontalAlignment="Left" Height="202" Margin="145,10,0,0" VerticalAlignment="Top" Width="532" Source="Ms. Palmer (Logo Version 3 Dark).png"/>
-        <TextBox x:Name="VMUsername" HorizontalAlignment="Left" Height="36" Margin="262,362,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="316" RenderTransformOrigin="0.5,0.5" TextInput="VMUsername_TextInput" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontFamily="Arial" FontSize="16" FontWeight="Bold" FontStyle="Oblique" TextOptions.TextHintingMode="Fixed">
+        <Image x:Name="Logo" HorizontalAlignment="Left" Height="76" Margin="318,24,0,0" VerticalAlignment="Top" Width="208" Source="Ms. Palmer (Logo Version 3 Dark).png" RenderTransformOrigin="0.347,0.018"/>
+        <TextBox x:Name="VMUsername" HorizontalAlignment="Left" Height="36" Margin="290,378,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="258" RenderTransformOrigin="0.5,0.5" TextInput="VMUsername_TextInput" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontFamily="Arial" FontSize="16" FontWeight="Bold" FontStyle="Oblique" TextOptions.TextHintingMode="Fixed">
             <TextBox.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -39,9 +51,9 @@
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <PasswordBox x:Name="VMPassword" Margin="249,461,212,301" TextInput="VMPassword_TextInput" TextOptions.TextHintingMode="Fixed" MaxLength="15" AutomationProperties.HelpText="Enter a password" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-        <RadioButton x:Name="InstallGuestAdditions" Margin="184,504,156,257" Content="Install VirtualBox Guest Additions (Improves Performance)" TextOptions.TextHintingMode="Fixed" FontWeight="Bold" FontSize="16" Foreground="White" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Checked="InstallGuestAdditions_Checked" />
-        <TextBox x:Name="OSKey" HorizontalAlignment="Left" Height="41" Margin="228,649,0,0" TextWrapping="Wrap" Text="Enter a Window's License (Optional)" VerticalAlignment="Top" Width="369" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontFamily="Arial" FontWeight="Bold" Loaded="OSKey_Loaded" FontSize="16" FontStyle="Italic"/>
+        <PasswordBox x:Name="VMPassword" Margin="290,455,252,307" TextInput="VMPassword_TextInput" TextOptions.TextHintingMode="Fixed" MaxLength="15" AutomationProperties.HelpText="Enter a password" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <RadioButton x:Name="InstallGuestAdditions" Margin="189,498,151,263" Content="Install VirtualBox Guest Additions (Improves Performance)" TextOptions.TextHintingMode="Fixed" FontWeight="Bold" FontSize="16" Foreground="White" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Checked="InstallGuestAdditions_Checked" />
+        <TextBox x:Name="OSKey" HorizontalAlignment="Left" Height="41" Margin="230,542,0,0" TextWrapping="Wrap" Text="Enter a Window's License (Optional)" VerticalAlignment="Top" Width="368" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontFamily="Arial" FontWeight="Bold" Loaded="OSKey_Loaded" FontSize="16" FontStyle="Italic"/>
         <Button x:Name="DeployVM" Content="" HorizontalAlignment="Left" Margin="274,714,0,0" VerticalAlignment="Top" Width="274" Height="76" Click="DeployVM_Click" RenderTransformOrigin="0.533,0.974">
             <Button.Background>
                 <ImageBrush ImageSource="Deploy Virtual Machine ImageButton.png"/>
@@ -52,10 +64,10 @@
                 </Style>
             </Button.Resources>
         </Button>
-        <ComboBox x:Name="VMSize" HorizontalAlignment="Left" Margin="334,580,0,0" VerticalAlignment="Top" Width="157" Height="53" Loaded="VMSize_Loaded_1" FontWeight="Bold" FontFamily="Arial" FontSize="18" TextOptions.TextHintingMode="Fixed" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-        <Label Content=" Virtual Machine Size" Margin="308,543,286,220" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Arial" FontWeight="Bold" FontSize="16" TextOptions.TextHintingMode="Fixed"/>
-        <Label Content="Enter a username" Margin="274,314,236,442" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Arial" FontWeight="Bold" FontSize="16" TextOptions.TextHintingMode="Fixed"/>
-        <Label Content="Enter a password" Margin="274,414,236,344" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Arial" FontWeight="Bold" FontSize="16" TextOptions.TextHintingMode="Fixed"/>
+        <ComboBox x:Name="VMSize" HorizontalAlignment="Left" Margin="290,301,0,0" VerticalAlignment="Top" Width="258" Height="36" Loaded="VMSize_Loaded_1" FontWeight="Bold" FontFamily="Arial" FontSize="18" TextOptions.TextHintingMode="Fixed" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <Label Content=" Virtual Machine Size" Margin="318,264,276,499" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Arial" FontWeight="Bold" FontSize="16" TextOptions.TextHintingMode="Fixed"/>
+        <Label Content="Enter a username" Margin="274,337,236,419" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Arial" FontWeight="Bold" FontSize="16" TextOptions.TextHintingMode="Fixed"/>
+        <Label Content="Enter a password" Margin="274,413,236,345" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Arial" FontWeight="Bold" FontSize="16" TextOptions.TextHintingMode="Fixed" RenderTransformOrigin="0.498,-0.619"/>
 
 
     </Grid>

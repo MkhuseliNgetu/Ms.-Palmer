@@ -423,6 +423,14 @@ namespace Ms.Palmer
           
         }
 
-      
+        private void ISOPath_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void SuggestedVMConfigView_Initialized(object sender, EventArgs e)
+        {
+
+        }
     }
 }

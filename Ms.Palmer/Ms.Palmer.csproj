@@ -57,12 +57,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="LoadingConfig.xaml.cs">
+      <DependentUpon>LoadingConfig.xaml</DependentUpon>
+    </Compile>
     <Compile Include="VM Config.xaml.cs">
       <DependentUpon>VM Config.xaml</DependentUpon>
     </Compile>
     <Compile Include="VM Report.xaml.cs">
       <DependentUpon>VM Report.xaml</DependentUpon>
     </Compile>
+    <Page Include="LoadingConfig.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -142,6 +149,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Exit ImageButton.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ProgressBar %28Regular Size%29.gif" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
