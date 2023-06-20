@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("progressbar%20(regular%20size).gif")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("confimbutton%20(version%202).png")]
 
 

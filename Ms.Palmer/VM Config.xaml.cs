@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -37,7 +38,10 @@ namespace Ms.Palmer
         public Stack<String> VM;
 
         private List<String> Line;
-        private WebClient ISODownloader;
+        private OpenFileDialog FindISOLocally;
+        private Nullable<bool> IsWindowOpened;
+
+        private LoadingConfig DownloadISO;
         public VM_Config(String VMUseCase)
         {
             InitializeComponent();
@@ -58,7 +62,20 @@ namespace Ms.Palmer
             }
             else
             {
-                throw new Exception("A Virtual Machines needs to have a use case");
+                throw new Exception("A virtual machines needs to have a use case");
+            }
+            return VM;
+        }
+        public Stack<String> SetIsoPath(string IsoPath)
+        {
+
+            if (IsoPath != null && VM.Count>0)
+            {
+                VM.Push(IsoPath);
+            }
+            else
+            {
+                throw new Exception("A virtual machine needs to have a iso to proceed");
             }
             return VM;
         }
@@ -72,7 +89,7 @@ namespace Ms.Palmer
             }
             else
             {
-                throw new Exception("A Virtual Machines needs to have a username and password");
+                throw new Exception("A virtual machines needs to have a username and password");
             }
 
             return VM;
@@ -86,7 +103,7 @@ namespace Ms.Palmer
             }
             else
             {
-                throw new Exception("A Virtual Machines needs to have a license/key to proceed");
+                throw new Exception("A virtual machines needs to have a license/key to proceed");
             }
 
             return VM;
@@ -97,22 +114,18 @@ namespace Ms.Palmer
             if (AreAdditionsNeeded != null)
             {
 
-                if (VM.Count == 4)
-                {
-                    VM.Push(AreAdditionsNeeded);
-                }
-                else if (VM.Count == 4)
-                {
-                    VM.Push(AreAdditionsNeeded);
-                }
-
+               VM.Push(AreAdditionsNeeded);
+               
+               
             }
             else
             {
-                throw new Exception("A Virtual Machines needs to have a license/key to proceed");
+                throw new Exception("A virtual machines needs to have a license/key to proceed");
             }
             return VM;
         }
+
+      
 
         private void VMSize_Loaded_1(object sender, RoutedEventArgs e)
         {
@@ -132,25 +145,6 @@ namespace Ms.Palmer
                     VMSize.Items.Add("Other...");
                 }
             }
-        }
-
-        private void VMPassword_TextInput(object sender, TextCompositionEventArgs e)
-        {
-
-        }
-
-        private void VMUsername_TextInput(object sender, TextCompositionEventArgs e)
-        {
-
-        }
-        private void OSKey_Loaded(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void InstallGuestAdditions_Checked(object sender, RoutedEventArgs e)
-        {
-
         }
 
         private void CreateInstallScript()
@@ -182,7 +176,7 @@ namespace Ms.Palmer
                                 File.AppendAllText(@VirtualMachineInstallScriptLocation, LineFromFile);
                             }
 
-                             
+                            
                         }
 
 
@@ -263,6 +257,8 @@ namespace Ms.Palmer
 
                     StartConfig(OperatingSystemType.SelectedItem.ToString());
 
+                    SetIsoPath(FindISOLocally.FileName);
+
                     AddUsernameAndPassCode(VMUsername.Text, VMPassword.Password);
 
                     AddKey(OSKey.Text);
@@ -281,6 +277,8 @@ namespace Ms.Palmer
                 case "Ubuntu":
 
                     StartConfig(OperatingSystemType.SelectedItem.ToString());
+
+                    SetIsoPath(FindISOLocally.FileName);
 
                     AddUsernameAndPassCode(VMUsername.Text, VMPassword.Password);
 
@@ -303,6 +301,8 @@ namespace Ms.Palmer
 
                     StartConfig(OperatingSystemType.SelectedItem.ToString());
 
+                    SetIsoPath(FindISOLocally.FileName);
+
                     AddUsernameAndPassCode(VMUsername.Text, VMPassword.Password);
 
                     AddKey("N/A");
@@ -323,6 +323,8 @@ namespace Ms.Palmer
 
                     StartConfig(OperatingSystemType.SelectedItem.ToString());
 
+                    SetIsoPath(FindISOLocally.FileName);
+
                     AddUsernameAndPassCode(VMUsername.Text, VMPassword.Password);
 
                     AddKey("N/A");
@@ -342,6 +344,8 @@ namespace Ms.Palmer
                 case "Linux Mint":
 
                     StartConfig(OperatingSystemType.SelectedItem.ToString());
+
+                    SetIsoPath(FindISOLocally.FileName);
 
                     AddUsernameAndPassCode(VMUsername.Text, VMPassword.Password);
 
@@ -364,7 +368,9 @@ namespace Ms.Palmer
 
             //Manipulate the script
             //Set Vm Name
-            Line.Add("<em> VBoxManage unattended install " + VM.ElementAt(4));
+            Line.Add("<em> VBoxManage unattended install " + VM.ElementAt(5));
+            //Set Iso Path
+            Line.Add("<--iso=" + VM.ElementAt(4) + ">");
             //Set Username and Password
             Line.Add("[--user=" + VM.ElementAt(3) + "]");
             Line.Add("[--password=" + VM.ElementAt(2) + "]");
@@ -374,63 +380,89 @@ namespace Ms.Palmer
             if (VM.ElementAt(0).Equals("true"))
             {
                 Line.Add("[--install-additions" + VM.ElementAt(0) + "]");
-                
-                //Get Additions, if not present
-                using (ISODownloader = new WebClient())
-                {
-                    ISODownloader.DownloadFile("http://download.virtualbox.org/virtualbox/7.0.8/VBoxGuestAdditions_7.0.8.iso", "VirtualBoxGuestAdditions(Latest).iso");
 
-                    if (ISODownloader.IsBusy)
-                    {
-                        //Insert Measurement bar
-                    }
-
-
-                }
+               
             }
             else if (VM.ElementAt(0).Equals("false"))
             {
 
                 Line.Add("[--install-additions" + VM.ElementAt(0) + "]");
-              
             }
 
-            using (FileStream OpenInstallScript = new FileStream(VirtualMachineInstallScriptLocation, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
-            {
-                
-                using(StreamReader ReadTheScript = new StreamReader(OpenInstallScript))
-                using (StreamWriter WriteToScript = new StreamWriter(OpenInstallScript))
+            
+               // DownloadISO = new LoadingConfig(VM);
+               // DownloadISO.Show();
+               // this.Hide();
+               // this.Close();
+           
+
+                using (FileStream OpenInstallScript = new FileStream(VirtualMachineInstallScriptLocation, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
                 {
-                    var AllData = ReadTheScript.ReadToEnd();
 
-                    OpenInstallScript.SetLength(0);
-
-                     foreach (String ConfigLine in Line)
+                    using (StreamReader ReadTheScript = new StreamReader(OpenInstallScript))
+                    using (StreamWriter WriteToScript = new StreamWriter(OpenInstallScript))
                     {
-                         WriteToScript.WriteLine(ConfigLine);
+                        var AllData = ReadTheScript.ReadToEnd();
+
+                        OpenInstallScript.SetLength(0);
+
+                        foreach (String ConfigLine in Line)
+                        {
+                            WriteToScript.WriteLine(ConfigLine);
+
+                        }
+
+                        WriteToScript.WriteLine("</em>");
 
                     }
-
-                    WriteToScript.WriteLine("</em>");
-
                 }
-            }
 
-            VMReport = new VM_Report(VM);
-            VMReport.Show();
-            this.Hide();
-            this.Close();
+                VMReport = new VM_Report(VM);
+                VMReport.Show();
+                this.Hide();
+                this.Close();
+            
           
-        }
 
-        private void ISOPath_TextChanged(object sender, TextChangedEventArgs e)
-        {
 
         }
+
 
         private void SuggestedVMConfigView_Initialized(object sender, EventArgs e)
         {
 
+        }
+
+        private void ConfirmISOButton_Click(object sender, RoutedEventArgs e)
+        {
+            //The following 6 consecutive programming statements were adapted from C# Corner:
+            //Link: https://www.c-sharpcorner.com/uploadfile/mahesh/openfiledialog-in-wpf/
+            //Author: Mahesh Chand
+            //Author Profile Link: https://www.c-sharpcorner.com/members/mahesh-chand
+            FindISOLocally = new OpenFileDialog();
+            FindISOLocally.Filter = "Disk Image File (*.iso)|*.iso";
+            FindISOLocally.InitialDirectory = @"C:\Users\";
+            FindISOLocally.Multiselect = false;
+            IsWindowOpened = FindISOLocally.ShowDialog();
+
+            switch (IsWindowOpened == true)
+            {
+                case true:
+                    ISOPath.Text = FindISOLocally.FileName;
+                    ISOPath.IsEnabled = false;
+                    break;
+
+                case false:
+                    throw new Exception("A iso must be selected to continue");
+                    break;
+
+            }
+        }
+
+        private void ISOPath_Initialized(object sender, EventArgs e)
+        {
+
+            ISOPath.IsEnabled = false;
         }
     }
 }

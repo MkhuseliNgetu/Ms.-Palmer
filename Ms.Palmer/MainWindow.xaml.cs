@@ -36,13 +36,7 @@ namespace Ms.Palmer
 
             CheckHypervisors();
 
-            UseCaseOne.Content = "Gaming";
-
-            UseCaseTwo.Content = "Education";
-
-            UseCaseThree.Content = "Work";
-
-            UseCaseFour.Content = "Entertainment";
+          
 
         }
 

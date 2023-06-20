@@ -27,6 +27,7 @@
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="15"/>
                 </Style>
+                
             </Button.Resources>
         </Button>
         <Button x:Name="UseCaseTwo" Content="" HorizontalAlignment="Left" Margin="435,310,0,0" VerticalAlignment="Top" Width="232" Height="91" Click="UseCaseTwo_Click">

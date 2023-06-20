@@ -19,7 +19,7 @@
 
         </Border>
         <Image x:Name="Logo" HorizontalAlignment="Left" Height="186" Margin="154,31,0,0" VerticalAlignment="Top" Width="498" Source="Ms. Palmer (Logo Version 3 Dark).png"/>
-        <Label x:Name="ProgressBarText" Content="(Loading Bar Text)" Foreground="#FFF9F6F6" Margin="210,488,180,44" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Arial" FontSize="16" FontWeight="Bold"/>
+        <Label x:Name="ProgressBarText" Content="(Loading Bar Text)" Foreground="#FFF9F6F6" Margin="210,488,180,44" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Arial" FontSize="16" FontWeight="Bold" Loaded="ProgressBarText_Loaded"/>
         <Image x:Name="ProgressBar" HorizontalAlignment="Left" Height="261" Margin="242,222,0,0" VerticalAlignment="Top" Width="336">
             <Image.OpacityMask>
                 <ImageBrush ImageSource="ProgressBar (Regular Size).gif" Stretch="UniformToFill"/>
