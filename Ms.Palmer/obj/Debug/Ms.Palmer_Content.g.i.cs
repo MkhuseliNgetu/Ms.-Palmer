@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("exit%20imagebutton.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("progressbar%20(regular%20size).gif")]
 
 
