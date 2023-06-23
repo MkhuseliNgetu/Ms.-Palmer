@@ -1,6 +1,8 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -42,6 +44,9 @@ namespace Ms.Palmer
         private Nullable<bool> IsWindowOpened;
 
         private LoadingConfig DownloadISO;
+        private DataTable MLSuggestedConfig;
+        private String ConnectionToDatabase;
+        private string SelectedUseCase;
         public VM_Config(String VMUseCase)
         {
             InitializeComponent();
@@ -50,6 +55,7 @@ namespace Ms.Palmer
 
             Line = new List<String>();
 
+            SelectedUseCase = VMUseCase;
         }
 
         public Stack<String> StartConfig(string OperatingSystem)
@@ -245,7 +251,6 @@ namespace Ms.Palmer
         }
 
 
-
         private void DeployVM_Click(object sender, RoutedEventArgs e)
         {
            
@@ -389,47 +394,135 @@ namespace Ms.Palmer
                 Line.Add("[--install-additions" + VM.ElementAt(0) + "]");
             }
 
-            
-               // DownloadISO = new LoadingConfig(VM);
-               // DownloadISO.Show();
-               // this.Hide();
-               // this.Close();
-           
 
-                using (FileStream OpenInstallScript = new FileStream(VirtualMachineInstallScriptLocation, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
+            // DownloadISO = new LoadingConfig(VM);
+            // DownloadISO.Show();
+            // this.Hide();
+            // this.Close();
+
+            //StoreConfigOffsite();
+
+            using (FileStream OpenInstallScript = new FileStream(VirtualMachineInstallScriptLocation, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
+            {
+
+                using (StreamReader ReadTheScript = new StreamReader(OpenInstallScript))
+                using (StreamWriter WriteToScript = new StreamWriter(OpenInstallScript))
                 {
+                   var AllData = ReadTheScript.ReadToEnd();
 
-                    using (StreamReader ReadTheScript = new StreamReader(OpenInstallScript))
-                    using (StreamWriter WriteToScript = new StreamWriter(OpenInstallScript))
+                    OpenInstallScript.SetLength(0);
+
+                    foreach (String ConfigLine in Line)
                     {
-                        var AllData = ReadTheScript.ReadToEnd();
-
-                        OpenInstallScript.SetLength(0);
-
-                        foreach (String ConfigLine in Line)
-                        {
-                            WriteToScript.WriteLine(ConfigLine);
-
-                        }
-
-                        WriteToScript.WriteLine("</em>");
+                        WriteToScript.WriteLine(ConfigLine);
 
                     }
-                }
 
-                VMReport = new VM_Report(VM);
-                VMReport.Show();
-                this.Hide();
-                this.Close();
+                    WriteToScript.WriteLine("</em>");
+
+                }
+            }
+
+            VMReport = new VM_Report(VM);
+            VMReport.Show();
+            this.Hide();
+            this.Close();
             
+        }
+
+        private void StoreConfigOffsite()
+        {
+            using (SqlConnection AccessDB = new SqlConnection(ConnectionToDatabase))
+            {
+                SqlCommand AddToDB = new SqlCommand("AddConfig");
+                AddToDB.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter UseCase = new SqlParameter();
+                UseCase.ParameterName = "@UseCase";
+                UseCase.SqlDbType = SqlDbType.VarChar;
+                UseCase.Size = 10;
+                UseCase.Value = this.SelectedUseCase;
+
+                SqlParameter OS = new SqlParameter();
+                OS.ParameterName = "@OperatingSystem";
+                OS.SqlDbType = SqlDbType.VarChar;
+                OS.Size = 15;
+                OS.Value = VM.ElementAt(5);
+
+                SqlParameter Size = new SqlParameter();
+                Size.ParameterName = "@Size";
+                Size.SqlDbType = SqlDbType.Int;
+                Size.Value = int.Parse(VMSize.SelectedItem.ToString());
+
+                SqlParameter OSLicense = new SqlParameter();
+                OSLicense.ParameterName = "@OperatingSystemLicense";
+                OSLicense.SqlDbType = SqlDbType.VarChar;
+                OSLicense.Size = 30;
+                OSLicense.Value = VM.ElementAt(1);
+
+                SqlParameter GuestAdditions = new SqlParameter();
+                GuestAdditions.ParameterName = "@GuestAdditions";
+                GuestAdditions.SqlDbType = SqlDbType.Bit;
+                GuestAdditions.Value = VM.ElementAt(0);
+
+                AddToDB.Parameters.Add(UseCase);
+                AddToDB.Parameters.Add(OS);
+                AddToDB.Parameters.Add(Size);
+                AddToDB.Parameters.Add(OSLicense);
+                AddToDB.Parameters.Add(GuestAdditions);
+
+                AccessDB.Open();
+
+                AddToDB.ExecuteNonQuery();
+
+                AccessDB.Close();
+
+
+
+            }
+        }
+        private DataTable SetupDataTable()
+        {
+            MLSuggestedConfig = new DataTable();
+
+            MLSuggestedConfig.Columns.Add(new DataColumn("Use Case", typeof(String)));
+            MLSuggestedConfig.Columns.Add(new DataColumn("OS", typeof(String)));
+            MLSuggestedConfig.Columns.Add(new DataColumn("Size", typeof(int)));
+            MLSuggestedConfig.Columns.Add(new DataColumn("OS License", typeof(String)));
+            MLSuggestedConfig.Columns.Add(new DataColumn("Guest Additions", typeof(Boolean)));
+
           
 
 
+            return MLSuggestedConfig;
         }
 
+        private DataTable AddConfigData()
+        {
+            DataRow Content = MLSuggestedConfig.NewRow();
+
+            return MLSuggestedConfig;
+        }
+
+        private void DisplaySuggestedConfig()
+        {
+           
+                foreach (DataColumn Header in MLSuggestedConfig.Columns)
+                {
+                     foreach (DataRow Content in MLSuggestedConfig.Rows)
+                     {
+
+                        SuggestedVMConfigView.Items.Add(Header +": "+ Content);
+
+                     }
+                }
+        }
 
         private void SuggestedVMConfigView_Initialized(object sender, EventArgs e)
         {
+
+            SetupDataTable();
+            //DisplaySuggestedConfig();
 
         }
 
