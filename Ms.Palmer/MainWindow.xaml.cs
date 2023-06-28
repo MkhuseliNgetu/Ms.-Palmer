@@ -22,25 +22,22 @@ namespace Ms.Palmer
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Boolean IsVirtualizationEnabled = false;
-        private Boolean IsHypervisorPresent = false;
+        private bool IsVirtualizationEnabled;
+        private bool IsHypervisorPresent;
 
         private VM_Config SetupInstallScript;
 
         public MainWindow()
         {
-
             InitializeComponent();
 
             CheckVirtualizationStatus();
 
             CheckHypervisors();
 
-          
-
         }
 
-        private Boolean CheckVirtualizationStatus()
+        private bool CheckVirtualizationStatus()
         {
             //The following programming statement was adapted from C-SharpCorner:
             //Link: https://www.c-sharpcorner.com/UploadFile/2d2d83/how-to-start-a-process-like-cmd-window-using-C-Sharp/
@@ -60,13 +57,12 @@ namespace Ms.Palmer
             //Author Profile Link:https://www.c-sharpcorner.com/members/aman2
             NewProcess.WorkingDirectory = @"C:\";
 
-            NewProcess.Arguments = " /C systeminfo";
+            NewProcess.Arguments = " /c systeminfo";
 
-            //This programming statement was adapted from StackOverflow:
-            //Link: https://stackoverflow.com/questions/3440105/hide-command-window-in-c-sharp-application
-            //Author: ajay_whiz
-            //Author Profile Link: https://stackoverflow.com/users/398368/ajay-whiz
-            NewProcess.WindowStyle = ProcessWindowStyle.Hidden;
+            NewProcess.RedirectStandardOutput = true;
+            NewProcess.UseShellExecute = false;
+            NewProcess.RedirectStandardInput = true;
+            NewProcess.CreateNoWindow = true;
 
             //The following programming statement was adapted from C-SharpCorner:
             //Link: https://www.c-sharpcorner.com/UploadFile/2d2d83/how-to-start-a-process-like-cmd-window-using-C-Sharp/
@@ -80,42 +76,41 @@ namespace Ms.Palmer
             //Author Profile Link:https://www.c-sharpcorner.com/members/aman2
             StartCheck.StartInfo = NewProcess;
 
-            try
-            {
-
+           
                 if (StartCheck.Start())
                 {
+                    StartCheck.WaitForExit();
 
-                    foreach (var Line in StartCheck.StandardOutput.ReadToEnd())
+                    if (StartCheck.ExitCode == 0)
                     {
 
-                        if (Line.ToString().Contains("A hypervisor has been detected"))
-                        {
+                        IsVirtualizationEnabled = true;
+                      
+                    }
+                    else if (StartCheck.ExitCode == 1)
+                    {
 
-                            IsVirtualizationEnabled = true;
-
-                            StartCheck.Kill();
-
-                        }
+                        IsVirtualizationEnabled = false;
+                        
                     }
                 }
-                else
-                {
-                    IsVirtualizationEnabled = false;
-                }
-            }
-            catch (Exception VirtulizationStatusNotFound)
+
+
+            if (IsVirtualizationEnabled == true)
             {
 
-                //throw new Exception("Virtualization Status could not be determined due to virtualization technologies (AMD-V, Intel VT-D) not being enabled in the BIOS.");
+                VirtualizationStatus.Content = "Virtualization: Enabled";
             }
-
-
+            else if (IsVirtualizationEnabled == false)
+            {
+                VirtualizationStatus.Content = "Virtualization: Disabled";
+               
+            }
 
             return IsVirtualizationEnabled;
         }
 
-        private Boolean CheckHypervisors()
+        private bool CheckHypervisors()
         {
             //The following programming statement was adapted from C-SharpCorner:
             //Link: https://www.c-sharpcorner.com/UploadFile/2d2d83/how-to-start-a-process-like-cmd-window-using-C-Sharp/
@@ -135,13 +130,12 @@ namespace Ms.Palmer
             //Author Profile Link:https://www.c-sharpcorner.com/members/aman2
             CheckAvailableHyperVisors.WorkingDirectory = @"C:\";
 
-            CheckAvailableHyperVisors.Arguments = "cd /PROGRA~1 && DIR Oracle";
+            CheckAvailableHyperVisors.Arguments = " /c cd /PROGRA~1 && DIR Oracle";
 
-            //This programming statement was adapted from StackOverflow:
-            //Link: https://stackoverflow.com/questions/3440105/hide-command-window-in-c-sharp-application
-            //Author: ajay_whiz
-            //Author Profile Link: https://stackoverflow.com/users/398368/ajay-whiz
-            CheckAvailableHyperVisors.WindowStyle = ProcessWindowStyle.Hidden;
+            CheckAvailableHyperVisors.RedirectStandardOutput = true;
+            CheckAvailableHyperVisors.UseShellExecute = false;
+            CheckAvailableHyperVisors.RedirectStandardInput = true;
+            CheckAvailableHyperVisors.CreateNoWindow = true;
 
             //The following programming statement was adapted from C-SharpCorner:
             //Link: https://www.c-sharpcorner.com/UploadFile/2d2d83/how-to-start-a-process-like-cmd-window-using-C-Sharp/
@@ -155,34 +149,34 @@ namespace Ms.Palmer
             //Author Profile Link:https://www.c-sharpcorner.com/members/aman2
             StartCheck.StartInfo = CheckAvailableHyperVisors;
 
-            try
-            {
-
+           
                 if (StartCheck.Start())
                 {
+                     StartCheck.WaitForExit();
 
-                    foreach (var Line in StartCheck.StandardOutput.ReadToEnd())
+                    if (StartCheck.ExitCode == 0)
                     {
-
-                        if (Line.ToString().Contains("VirtualBox"))
-                        {
-
-                            IsHypervisorPresent = true;
-
-                            StartCheck.Kill();
-
-                        }
+                        IsHypervisorPresent = true; 
                     }
-                }
-                else
-                {
-                    IsHypervisorPresent = false;
-                }
-            }
-            catch (Exception HyperVisorsNotFound)
-            {
+                    else if (StartCheck.ExitCode == 1)
+                    {
+                        IsHypervisorPresent = false;
+                        
+                    }
 
-                //throw new Exception(" A hypervisor was not found in this system. Please install a virtual machine hypervior and restart the program.");
+                   
+                }
+
+
+            if (IsHypervisorPresent == true)
+            {
+                HyperVisorStatus.Content = "Hypervisor's: Hypervisor available!";
+            }
+            else if (IsHypervisorPresent == false)
+            {
+                HyperVisorStatus.Content = "Hypervisor's: Hypervisor unavailable";
+                
+
             }
 
             return IsHypervisorPresent;
@@ -190,6 +184,7 @@ namespace Ms.Palmer
 
         private void UseCaseOne_Click(object sender, RoutedEventArgs e)
         {
+            UseCaseOne.Content = "Gaming";
             SetupInstallScript = new VM_Config((string)UseCaseOne.Content);
             SetupInstallScript.Show();
 
@@ -200,6 +195,7 @@ namespace Ms.Palmer
 
         private void UseCaseTwo_Click(object sender, RoutedEventArgs e)
         {
+            UseCaseTwo.Content = "Work";
             SetupInstallScript = new VM_Config((string)UseCaseTwo.Content);
             SetupInstallScript.Show();
 
@@ -209,6 +205,7 @@ namespace Ms.Palmer
 
         private void UseCaseThree_Click(object sender, RoutedEventArgs e)
         {
+            UseCaseThree.Content = "Education";
             SetupInstallScript = new VM_Config((string)UseCaseThree.Content);
             SetupInstallScript.Show();
 
@@ -218,6 +215,7 @@ namespace Ms.Palmer
 
         private void UseCaseFour_Click(object sender, RoutedEventArgs e)
         {
+            UseCaseFour.Content = "Entertainment";
             SetupInstallScript = new VM_Config((string)UseCaseFour.Content);
             SetupInstallScript.Show();
 
@@ -227,28 +225,12 @@ namespace Ms.Palmer
 
         private void VirtualizationStatus_Initialized_1(object sender, EventArgs e)
         {
-            if (IsVirtualizationEnabled == true)
-            {
-
-                VirtualizationStatus.Content = "Virtualization Status: Enabled";
-            }
-            else
-            {
-                VirtualizationStatus.Content = "Virtualization Status: Disabled";
-            }
+          
         }
 
         private void HyperVisorStatus_Initialized_1(object sender, EventArgs e)
         {
-            if (IsHypervisorPresent == true)
-            {
-                HyperVisorStatus.Content = "Hypervisor Status: Hypervisors Found Successfully!";
-            }
-            else
-            {
-                HyperVisorStatus.Content = "Hypervisor Status:"+"\n"+"No Hypervisor's have been found";
-
-            }
+           
         }
     }
 

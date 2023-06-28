@@ -16,10 +16,10 @@
             
         </Border>
 
-        <Image x:Name="Logo" HorizontalAlignment="Left" Height="214" Margin="135,23,0,0" VerticalAlignment="Top" Width="532" Source="Ms. Palmer (Logo Version 3 Dark).png"/>
-        <Label x:Name="VirtualizationStatus" Content="(Virtualization Status)" Margin="98,237,417,295" Initialized="VirtualizationStatus_Initialized_1" FontFamily="Arial" FontSize="16" FontWeight="Bold" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" TextOptions.TextHintingMode="Animated"/>
-        <Label x:Name="HyperVisorStatus" Content="(Hypervisor Status)" Margin="409,237,77,300" Initialized="HyperVisorStatus_Initialized_1" FontFamily="Arial" FontSize="16" FontWeight="Bold" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-        <Button x:Name="UseCaseOne" Content="" HorizontalAlignment="Left" Margin="135,310,0,0" VerticalAlignment="Top" Width="211" Height="91" Click="UseCaseOne_Click">
+        <Image x:Name="Logo" HorizontalAlignment="Left" Height="156" Margin="194,10,0,0" VerticalAlignment="Top" Width="432" Source="Ms. Palmer (Logo Version 3 Dark).png"/>
+        <Label x:Name="VirtualizationStatus" Content="(Virtualization Status)" Margin="98,208,417,324" Initialized="VirtualizationStatus_Initialized_1" FontFamily="Arial" FontSize="16" FontWeight="Bold" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" TextOptions.TextHintingMode="Animated"/>
+        <Label x:Name="HyperVisorStatus" Content="(Hypervisor Status)" Margin="406,190,80,306" Initialized="HyperVisorStatus_Initialized_1" FontFamily="Arial" FontSize="16" FontWeight="Bold" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <Button x:Name="UseCaseOne" Content="" HorizontalAlignment="Left" Margin="135,299,0,0" VerticalAlignment="Top" Width="211" Height="91" Click="UseCaseOne_Click">
             <Button.Background>
                 <ImageBrush ImageSource="UseCaseOne (Version 2).png" Stretch="Uniform"/>
             </Button.Background>
@@ -30,7 +30,7 @@
                 
             </Button.Resources>
         </Button>
-        <Button x:Name="UseCaseTwo" Content="" HorizontalAlignment="Left" Margin="435,310,0,0" VerticalAlignment="Top" Width="232" Height="91" Click="UseCaseTwo_Click">
+        <Button x:Name="UseCaseTwo" Content="" HorizontalAlignment="Left" Margin="441,299,0,0" VerticalAlignment="Top" Width="232" Height="91" Click="UseCaseTwo_Click">
             <Button.Background>
                 <ImageBrush ImageSource="UseCaseTwo (Version 2).png" Stretch="Uniform"/>
             </Button.Background>
@@ -40,7 +40,7 @@
                 </Style>
             </Button.Resources>
         </Button>
-        <Button x:Name="UseCaseThree" Content="" HorizontalAlignment="Left" Margin="135,435,0,0" VerticalAlignment="Top" Width="211" Height="91" Click="UseCaseThree_Click">
+        <Button x:Name="UseCaseThree" Content="" HorizontalAlignment="Left" Margin="135,420,0,0" VerticalAlignment="Top" Width="211" Height="91" Click="UseCaseThree_Click">
             <Button.Background>
                 <ImageBrush ImageSource="UseCaseThree (Version 2).png" Stretch="Uniform"/>
             </Button.Background>
@@ -50,7 +50,7 @@
                 </Style>
             </Button.Resources>
         </Button>
-        <Button x:Name="UseCaseFour" Content="" HorizontalAlignment="Left" Margin="441,435,0,0" VerticalAlignment="Top" Width="226" Height="91" RenderTransformOrigin="0.209,0.557" Click="UseCaseFour_Click">
+        <Button x:Name="UseCaseFour" Content="" HorizontalAlignment="Left" Margin="441,420,0,0" VerticalAlignment="Top" Width="226" Height="91" RenderTransformOrigin="0.209,0.557" Click="UseCaseFour_Click">
             <Button.Background>
                 <ImageBrush ImageSource="UseCaseFour (Version 2).png" Stretch="Uniform"/>
             </Button.Background>

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -26,24 +27,19 @@ namespace Ms.Palmer
     public partial class VM_Config : Window
     {
 
-        private String VirtualMachineInstallScriptName = "PalmerInstallScript.txt";
-        private String VirtualMachineInstallScriptLocation = "";
-        private String VirtualBoxUnattendedInstallTemplate = "VirtualBox VM Unattended Install Template (Credit To Valery Portnyagin).txt";
-        private String VirtualBoxUnattendedInstallTemplateLocation = "";
 
 
         private String[] OperatingSystems = new string[5];
         private int[] DefaultVMSizes = new int[5];
         private bool IsGuestAddtionsSet;
 
-        private VM_Report VMReport;
+      
         public Stack<String> VM;
 
-        private List<String> Line;
         private OpenFileDialog FindISOLocally;
         private Nullable<bool> IsWindowOpened;
 
-        private LoadingConfig DownloadISO;
+        private LoadingConfig DeployVMConfig;
         private DataTable MLSuggestedConfig;
         private String ConnectionToDatabase;
         private string SelectedUseCase;
@@ -51,17 +47,16 @@ namespace Ms.Palmer
         {
             InitializeComponent();
 
-            CreateInstallScript();
-
-            Line = new List<String>();
-
             SelectedUseCase = VMUseCase;
-        }
 
-        public Stack<String> StartConfig(string OperatingSystem)
+            SetName(SelectedUseCase);
+        }
+       
+
+        public Stack<String> SetOS(string OperatingSystem)
         {
 
-            VM = new Stack<string>();
+          
             if (OperatingSystem != null)
             {
                 VM.Push(OperatingSystem);
@@ -131,7 +126,68 @@ namespace Ms.Palmer
             return VM;
         }
 
-      
+        public Stack<String> AddPostInstallScript(string UseCase)
+        {
+            string PathToScript;
+            switch (SelectedUseCase)
+            {
+
+                case "Gaming":
+                    PathToScript = System.IO.Path.Combine(Directory.GetCurrentDirectory(),"\\Scripts\\DeploySoftware (Gaming) (Linux).sh");
+                    VM.Push(PathToScript);
+                    break;
+                case "Work":
+                    PathToScript = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "\\Scripts\\DeploySoftware (Work) (Linux).sh");
+                    VM.Push(PathToScript);
+                    break;
+                case "Entertainment":
+                    PathToScript = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "\\Scripts\\DeploySoftware (Entertainment) (Linux).sh");
+                    VM.Push(PathToScript);
+                    break;
+                case "Education":
+                    PathToScript = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "\\Scripts\\DeploySoftware (Education) (Linux).sh");
+                    VM.Push(PathToScript);
+                    break;
+
+            }
+
+            return VM;
+        }
+
+        public Stack<String> SetName(string UseCase)
+        {
+            VM = new Stack<string>();
+            switch (SelectedUseCase)
+            {
+
+                case "Gaming":
+                    VM.Push(SelectedUseCase);
+                    break;
+                case "Work":
+                    VM.Push(SelectedUseCase);
+                    break;
+                case "Entertainment":
+                    VM.Push(SelectedUseCase);
+                    break;
+                case "Education":
+                    VM.Push(SelectedUseCase);
+                    break;
+
+            }
+
+            return VM;
+        }
+
+        public Stack<String> SetSize(string VMSize)
+        {
+           
+            if(VMSize != null)
+            {
+
+                VM.Push(VMSize.Replace("GB",""));
+            }
+            return VM;
+        }
 
         private void VMSize_Loaded_1(object sender, RoutedEventArgs e)
         {
@@ -144,7 +200,7 @@ namespace Ms.Palmer
             foreach (int VMSizes in DefaultVMSizes)
             {
 
-                VMSize.Items.Add(VMSizes.ToString() + "Gb");
+                VMSize.Items.Add(VMSizes.ToString() + "GB");
 
                 if (VMSize.Items.Count.Equals(5))
                 {
@@ -153,61 +209,7 @@ namespace Ms.Palmer
             }
         }
 
-        private void CreateInstallScript()
-        {
-            VirtualBoxUnattendedInstallTemplateLocation = System.IO.Path.Combine(Directory.GetParent(System.Reflection.Assembly.GetExecutingAssembly().Location).FullName, VirtualBoxUnattendedInstallTemplate);
-            VirtualMachineInstallScriptLocation = System.IO.Path.Combine(Directory.GetParent(System.Reflection.Assembly.GetExecutingAssembly().Location).FullName, VirtualMachineInstallScriptName);
-
-            switch (File.Exists(VirtualMachineInstallScriptLocation))
-            {
-
-                case true:
-
-                    if (!File.ReadAllText(VirtualMachineInstallScriptLocation).Contains(""))
-                    {
-                        File.Delete(VirtualMachineInstallScriptLocation);
-
-                        File.Create(VirtualMachineInstallScriptLocation).Dispose();
-
-                        //Adding Template
-                        using (StreamReader ReadTheTemplate = File.OpenText(VirtualBoxUnattendedInstallTemplateLocation))
-                        {
-                            
-
-                            while (ReadTheTemplate.Read() != null)
-                            {
-
-                                String LineFromFile = ReadTheTemplate.ReadToEnd();
-
-                                File.AppendAllText(@VirtualMachineInstallScriptLocation, LineFromFile);
-                            }
-
-                            
-                        }
-
-
-                    }
-                    break;
-
-                case false:
-
-
-                    File.Create(VirtualMachineInstallScriptLocation).Dispose();
-
-                    //Adding Template
-                    using (StreamReader ReadTheTemplate = File.OpenText(VirtualBoxUnattendedInstallTemplateLocation))
-                    {
-
-                        String LineFromFile = ReadTheTemplate.ReadToEnd();
-
-                        File.AppendAllText(@VirtualMachineInstallScriptLocation, LineFromFile);
-                    }
-
-                 
-
-                    break;
-            }
-        }
+      
 
         private void OperatingSystemType_Loaded(object sender, RoutedEventArgs e)
         {
@@ -250,7 +252,6 @@ namespace Ms.Palmer
             }
         }
 
-
         private void DeployVM_Click(object sender, RoutedEventArgs e)
         {
            
@@ -260,9 +261,11 @@ namespace Ms.Palmer
             {
                 case "Windows 10":
 
-                    StartConfig(OperatingSystemType.SelectedItem.ToString());
+                    SetOS("Windows10");
 
                     SetIsoPath(FindISOLocally.FileName);
+
+                    SetSize(VMSize.SelectedItem.ToString());
 
                     AddUsernameAndPassCode(VMUsername.Text, VMPassword.Password);
 
@@ -278,12 +281,16 @@ namespace Ms.Palmer
                         IsGuestAddtionsSet = false;
                         SetAdditions(IsGuestAddtionsSet.ToString());
                     }
+
+                    AddPostInstallScript(SelectedUseCase);
                     break;
                 case "Ubuntu":
 
-                    StartConfig(OperatingSystemType.SelectedItem.ToString());
+                    SetOS("Ubuntu_64");
 
                     SetIsoPath(FindISOLocally.FileName);
+
+                    SetSize(VMSize.SelectedItem.ToString());
 
                     AddUsernameAndPassCode(VMUsername.Text, VMPassword.Password);
 
@@ -300,13 +307,15 @@ namespace Ms.Palmer
                         SetAdditions(IsGuestAddtionsSet.ToString());
                     }
 
-
+                    AddPostInstallScript(SelectedUseCase);
                     break;
                 case "Fedora":
 
-                    StartConfig(OperatingSystemType.SelectedItem.ToString());
+                    SetOS("Fedora_64");
 
                     SetIsoPath(FindISOLocally.FileName);
+
+                    SetSize(VMSize.SelectedItem.ToString());
 
                     AddUsernameAndPassCode(VMUsername.Text, VMPassword.Password);
 
@@ -323,12 +332,15 @@ namespace Ms.Palmer
                         SetAdditions(IsGuestAddtionsSet.ToString());
                     }
 
+                    AddPostInstallScript(SelectedUseCase);
                     break;
                 case "Pop OS":
 
-                    StartConfig(OperatingSystemType.SelectedItem.ToString());
+                    SetOS("Linux_64");
 
                     SetIsoPath(FindISOLocally.FileName);
+
+                    SetSize(VMSize.SelectedItem.ToString());
 
                     AddUsernameAndPassCode(VMUsername.Text, VMPassword.Password);
 
@@ -345,12 +357,15 @@ namespace Ms.Palmer
                         SetAdditions(IsGuestAddtionsSet.ToString());
                     }
 
+                    AddPostInstallScript(SelectedUseCase);
                     break;
                 case "Linux Mint":
 
-                    StartConfig(OperatingSystemType.SelectedItem.ToString());
+                    SetOS("Linux_64");
 
                     SetIsoPath(FindISOLocally.FileName);
+
+                    SetSize(VMSize.SelectedItem.ToString());
 
                     AddUsernameAndPassCode(VMUsername.Text, VMPassword.Password);
 
@@ -367,67 +382,16 @@ namespace Ms.Palmer
                         SetAdditions(IsGuestAddtionsSet.ToString());
                     }
 
+                    AddPostInstallScript(SelectedUseCase);
                     break;
 
             }
 
-            //Manipulate the script
-            //Set Vm Name
-            Line.Add("<em> VBoxManage unattended install " + VM.ElementAt(5));
-            //Set Iso Path
-            Line.Add("<--iso=" + VM.ElementAt(4) + ">");
-            //Set Username and Password
-            Line.Add("[--user=" + VM.ElementAt(3) + "]");
-            Line.Add("[--password=" + VM.ElementAt(2) + "]");
-            //Set Key 
-            Line.Add("[--key="+ VM.ElementAt(1)+"]");
-            // Set Guest Additions
-            if (VM.ElementAt(0).Equals("true"))
-            {
-                Line.Add("[--install-additions" + VM.ElementAt(0) + "]");
-
-               
-            }
-            else if (VM.ElementAt(0).Equals("false"))
-            {
-
-                Line.Add("[--install-additions" + VM.ElementAt(0) + "]");
-            }
-
-
-            // DownloadISO = new LoadingConfig(VM);
-            // DownloadISO.Show();
-            // this.Hide();
-            // this.Close();
-
-            //StoreConfigOffsite();
-
-            using (FileStream OpenInstallScript = new FileStream(VirtualMachineInstallScriptLocation, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
-            {
-
-                using (StreamReader ReadTheScript = new StreamReader(OpenInstallScript))
-                using (StreamWriter WriteToScript = new StreamWriter(OpenInstallScript))
-                {
-                   var AllData = ReadTheScript.ReadToEnd();
-
-                    OpenInstallScript.SetLength(0);
-
-                    foreach (String ConfigLine in Line)
-                    {
-                        WriteToScript.WriteLine(ConfigLine);
-
-                    }
-
-                    WriteToScript.WriteLine("</em>");
-
-                }
-            }
-
-            VMReport = new VM_Report(VM);
-            VMReport.Show();
+            DeployVMConfig = new LoadingConfig(VM);
+            DeployVMConfig.Show();
             this.Hide();
             this.Close();
-            
+
         }
 
         private void StoreConfigOffsite()
