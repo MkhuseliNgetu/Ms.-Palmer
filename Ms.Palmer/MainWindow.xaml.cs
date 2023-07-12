@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ThreadState = System.Threading.ThreadState;
 
 namespace Ms.Palmer
 {
@@ -31,13 +32,20 @@ namespace Ms.Palmer
         {
             InitializeComponent();
 
-            CheckVirtualizationStatus();
+            Thread StartUpCheck = new Thread(CheckVirtualizationStatus);
+            Thread StartUpCheckTwo = new Thread(CheckHypervisors);
 
-            CheckHypervisors();
+            StartUpCheck.Start();
+
+            Thread.Sleep(5000);
+
+            StartUpCheckTwo.Start();
+            
+            
 
         }
 
-        private bool CheckVirtualizationStatus()
+        private void CheckVirtualizationStatus()
         {
             //The following programming statement was adapted from C-SharpCorner:
             //Link: https://www.c-sharpcorner.com/UploadFile/2d2d83/how-to-start-a-process-like-cmd-window-using-C-Sharp/
@@ -85,6 +93,7 @@ namespace Ms.Palmer
                     {
 
                         IsVirtualizationEnabled = true;
+                        
                       
                     }
                     else if (StartCheck.ExitCode == 1)
@@ -92,25 +101,26 @@ namespace Ms.Palmer
 
                         IsVirtualizationEnabled = false;
                         
+                        
                     }
                 }
 
-
-            if (IsVirtualizationEnabled == true)
+            this.Dispatcher.Invoke(() =>
             {
+                if (IsVirtualizationEnabled == true)
+                {
+                    VirtualizationStatus.Content = "Virtualization: Enabled";
+                }
+                else if (IsVirtualizationEnabled == false)
+                {
+                    VirtualizationStatus.Content = "Virtualization: Disabled";
+                }
+            });
+            
 
-                VirtualizationStatus.Content = "Virtualization: Enabled";
-            }
-            else if (IsVirtualizationEnabled == false)
-            {
-                VirtualizationStatus.Content = "Virtualization: Disabled";
-               
-            }
-
-            return IsVirtualizationEnabled;
         }
 
-        private bool CheckHypervisors()
+        private void CheckHypervisors()
         {
             //The following programming statement was adapted from C-SharpCorner:
             //Link: https://www.c-sharpcorner.com/UploadFile/2d2d83/how-to-start-a-process-like-cmd-window-using-C-Sharp/
@@ -166,20 +176,22 @@ namespace Ms.Palmer
 
                    
                 }
-
-
-            if (IsHypervisorPresent == true)
+            this.Dispatcher.Invoke(() =>
             {
-                HyperVisorStatus.Content = "Hypervisor's: Hypervisor available!";
-            }
-            else if (IsHypervisorPresent == false)
-            {
-                HyperVisorStatus.Content = "Hypervisor's: Hypervisor unavailable";
-                
+                if (IsHypervisorPresent == true)
+                {
+                    HyperVisorStatus.Content = "Hypervisor's: Hypervisor available!";
+                }
+                else if (IsHypervisorPresent == false)
+                {
+                    HyperVisorStatus.Content = "Hypervisor's: Hypervisor unavailable";
 
-            }
 
-            return IsHypervisorPresent;
+                }
+            });
+
+            
+
         }
 
         private void UseCaseOne_Click(object sender, RoutedEventArgs e)

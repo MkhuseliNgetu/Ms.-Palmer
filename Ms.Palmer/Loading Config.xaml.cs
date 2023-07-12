@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Mime;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -31,6 +32,7 @@ namespace Ms.Palmer
         private bool IsVirtualMachineDeploymentComplete;
         private bool IsGuestAdditionsPresent;
         private bool IsDownloadComplete;
+        private bool IsSoftwareLoaded;
 
 
         public LoadingConfig(Stack<String> FullVMConfig)
@@ -39,7 +41,19 @@ namespace Ms.Palmer
             PassedConfig = new Stack<String>();
             PassedConfig = FullVMConfig;
 
-            CreateVM();
+            Thread RunVMSetup = new Thread(CreateVM);
+            Thread RunVMSetupTwo = new Thread(LoadSoftware);
+            Thread RunVMSetupThree = new Thread(CheckAdditions);
+
+            RunVMSetup.Start();
+
+            Thread.Sleep(5000);
+
+            RunVMSetupTwo.Start();
+
+            Thread.Sleep(5000);
+
+            RunVMSetupThree.Start();
         }
 
         private void CreateVM()
@@ -52,77 +66,41 @@ namespace Ms.Palmer
                 Debug.WriteLine(DC);
             }
 
-        
-            //The following programming statement was adapted from C-SharpCorner:
-            //Link: https://www.c-sharpcorner.com/UploadFile/2d2d83/how-to-start-a-process-like-cmd-window-using-C-Sharp/
-            //Author: Aman
-            //Author Profile Link:https://www.c-sharpcorner.com/members/aman2
+            Debug.WriteLine("VM Size: " + Convert.ToString(Convert.ToInt64(PassedConfig.ElementAt(5)) * 1024));
+     
             ProcessStartInfo CreateAVirtualMachine = new ProcessStartInfo();
 
-            //The following programming statement was adapted from C-SharpCorner:
-            //Link: https://www.c-sharpcorner.com/UploadFile/2d2d83/how-to-start-a-process-like-cmd-window-using-C-Sharp/
-            //Author: Aman
-            //Author Profile Link:https://www.c-sharpcorner.com/members/aman2
             CreateAVirtualMachine.FileName = "cmd.exe";
-
-            //The following programming statement was adapted from C-SharpCorner:
-            //Link: https://www.c-sharpcorner.com/UploadFile/2d2d83/how-to-start-a-process-like-cmd-window-using-C-Sharp/
-            //Author: Aman
-            //Author Profile Link:https://www.c-sharpcorner.com/members/aman2
             CreateAVirtualMachine.WorkingDirectory = @"C:\PROGRA~1\Oracle\VirtualBox\";
 
-            CreateAVirtualMachine.Arguments = " /c VBoxManage createvm --name "+PassedConfig.ElementAt(8)+" --ostype Fedora_64 --register && " +
-                                            "VBoxManage createhd --filename C:/Users/%USERNAME%/VirtualBox/"+PassedConfig.ElementAt(8)+"/"+PassedConfig.ElementAt(8)+".vdi --size "+Convert.ToString(Convert.ToInt64(PassedConfig.ElementAt(5)) * 1024);
+            CreateAVirtualMachine.Arguments = " /c VBoxManage createvm --name "+PassedConfig.ElementAt(8)+" --ostype Linux_64 --register && " +
+                                            "VBoxManage createhd --filename C:/Users/%USERNAME%/VirtualBox/"+PassedConfig.ElementAt(8)+"/"+PassedConfig.ElementAt(8)+".vdi --size "+ Convert.ToString(Convert.ToInt64(PassedConfig.ElementAt(5)) * 1024);
             CreateAVirtualMachine.RedirectStandardOutput = true;
             CreateAVirtualMachine.UseShellExecute = false;
             CreateAVirtualMachine.RedirectStandardInput = true;
             CreateAVirtualMachine.CreateNoWindow = true;
 
-            //The following programming statement was adapted from C-SharpCorner:
-            //Link: https://www.c-sharpcorner.com/UploadFile/2d2d83/how-to-start-a-process-like-cmd-window-using-C-Sharp/
-            //Author: Aman
-            //Author Profile Link:https://www.c-sharpcorner.com/members/aman2
+           
             ProcessStartInfo AddVirtualMachineStorage = new ProcessStartInfo();
 
-            //The following programming statement was adapted from C-SharpCorner:
-            //Link: https://www.c-sharpcorner.com/UploadFile/2d2d83/how-to-start-a-process-like-cmd-window-using-C-Sharp/
-            //Author: Aman
-            //Author Profile Link:https://www.c-sharpcorner.com/members/aman2
             AddVirtualMachineStorage.FileName = "cmd.exe";
-
-            //The following programming statement was adapted from C-SharpCorner:
-            //Link: https://www.c-sharpcorner.com/UploadFile/2d2d83/how-to-start-a-process-like-cmd-window-using-C-Sharp/
-            //Author: Aman
-            //Author Profile Link:https://www.c-sharpcorner.com/members/aman2
             AddVirtualMachineStorage.WorkingDirectory = @"C:\PROGRA~1\Oracle\VirtualBox\";
 
           
-            AddVirtualMachineStorage.Arguments = " /c VBoxManage storagectl "+PassedConfig.ElementAt(8)+" --name 'SATA-Controller' --add sata --controller IntelAHCI && " +
-                                            "VBoxManage storageattach "+PassedConfig.ElementAt(8)+" --storagectl 'SATA-Controller' --port 0 --device 0 --type hdd --medium C:/Users/%USERNAME%/VirtualBox/"+PassedConfig.ElementAt(8)+"/"+PassedConfig.ElementAt(8)+".vdi && " +
-                                            "VBoxManage storagectl "+PassedConfig.ElementAt(8)+" --name 'IDE-Controller' --add ide && " +
-                                            "VBoxManage storageattach "+PassedConfig.ElementAt(8)+" --storagectl 'SATA-Controller' --port 0 --device 0 --type dvddrive --medium "+PassedConfig.ElementAt(6);
+            AddVirtualMachineStorage.Arguments = " /c VBoxManage storagectl "+PassedConfig.ElementAt(8)+" --name 'Drive-Controller' --add sata --controller IntelAHCI && " +
+                                            "VBoxManage storageattach "+PassedConfig.ElementAt(8)+" --storagectl 'Drive-Controller' --port 0 --device 0 --type hdd --medium C:/Users/%USERNAME%/VirtualBox/"+PassedConfig.ElementAt(8)+"/"+PassedConfig.ElementAt(8)+".vdi && " +
+                                            "VBoxManage storagectl "+PassedConfig.ElementAt(8)+ " --name 'Disk-Controller' --add ide && " +
+                                            "VBoxManage storageattach "+PassedConfig.ElementAt(8)+ " --storagectl 'Disk-Controller' --port 0 --device 1 --type dvddrive --medium " + PassedConfig.ElementAt(6);
 
             AddVirtualMachineStorage.RedirectStandardOutput = true;
             AddVirtualMachineStorage.UseShellExecute = false;
             AddVirtualMachineStorage.RedirectStandardInput = true;
             AddVirtualMachineStorage.CreateNoWindow = true;
 
-            //The following programming statement was adapted from C-SharpCorner:
-            //Link: https://www.c-sharpcorner.com/UploadFile/2d2d83/how-to-start-a-process-like-cmd-window-using-C-Sharp/
-            //Author: Aman
-            //Author Profile Link:https://www.c-sharpcorner.com/members/aman2
             ProcessStartInfo AdditionalConfigurations = new ProcessStartInfo();
 
-            //The following programming statement was adapted from C-SharpCorner:
-            //Link: https://www.c-sharpcorner.com/UploadFile/2d2d83/how-to-start-a-process-like-cmd-window-using-C-Sharp/
-            //Author: Aman
-            //Author Profile Link:https://www.c-sharpcorner.com/members/aman2
             AdditionalConfigurations.FileName = "cmd.exe";
 
-            //The following programming statement was adapted from C-SharpCorner:
-            //Link: https://www.c-sharpcorner.com/UploadFile/2d2d83/how-to-start-a-process-like-cmd-window-using-C-Sharp/
-            //Author: Aman
-            //Author Profile Link:https://www.c-sharpcorner.com/members/aman2
             AdditionalConfigurations.WorkingDirectory = @"C:\PROGRA~1\Oracle\VirtualBox\";
 
 
@@ -212,66 +190,130 @@ namespace Ms.Palmer
           
         }
 
-        private void CheckAdditions()
+        private void LoadSoftware()
         {
 
-            //Manipulate the script
-            //The following programming statement was adapted from C-SharpCorner:
-            //Link: https://www.c-sharpcorner.com/UploadFile/2d2d83/how-to-start-a-process-like-cmd-window-using-C-Sharp/
-            //Author: Aman
-            //Author Profile Link:https://www.c-sharpcorner.com/members/aman2
-            ProcessStartInfo FindGuestAdditions = new ProcessStartInfo();
+            ProcessStartInfo MountISO = new ProcessStartInfo();
+
+            MountISO.FileName = "powershell.exe";
+
+            MountISO.Arguments = " /c Mount-DiskImage -ImagePath " + PassedConfig.ElementAt(6) + "";
+            MountISO.RedirectStandardOutput = true;
+            MountISO.UseShellExecute = false;
+            MountISO.RedirectStandardInput = true;
+            MountISO.CreateNoWindow = true;
+
+            ProcessStartInfo UnmountISO = new ProcessStartInfo();
+
+            UnmountISO.FileName = "powershell.exe";
+
+            UnmountISO.Arguments = " /c Dismount-DiskImage -ImagePath " + PassedConfig.ElementAt(6) + "";
+            UnmountISO.RedirectStandardOutput = true;
+            UnmountISO.UseShellExecute = false;
+            UnmountISO.RedirectStandardInput = true;
+            UnmountISO.CreateNoWindow = true;
 
             //The following programming statement was adapted from C-SharpCorner:
             //Link: https://www.c-sharpcorner.com/UploadFile/2d2d83/how-to-start-a-process-like-cmd-window-using-C-Sharp/
             //Author: Aman
             //Author Profile Link:https://www.c-sharpcorner.com/members/aman2
-            FindGuestAdditions.FileName = "cmd.exe";
+            Process StartDeployment = new Process();
 
             //The following programming statement was adapted from C-SharpCorner:
             //Link: https://www.c-sharpcorner.com/UploadFile/2d2d83/how-to-start-a-process-like-cmd-window-using-C-Sharp/
             //Author: Aman
             //Author Profile Link:https://www.c-sharpcorner.com/members/aman2
-            FindGuestAdditions.WorkingDirectory = @"C:\PROGRA~1\Oracle\VirtualBox\";
+            StartDeployment.StartInfo = MountISO;
 
-            //CreateAVirualMachine.Arguments = "bash ./UnattendedVirtualBoxInstall.sh Fedora_64 Snowy 8192 /Users/%USERNAME%/Documents/GitHub/Ms.-Palmer/Ms.Palmer/Demo.iso Booby Gotti@121345# N/A";
-            FindGuestAdditions.Arguments = " /c touch VBoxGuestAddtions.iso";
-
-            FindGuestAdditions.RedirectStandardOutput = true;
-            FindGuestAdditions.UseShellExecute = false;
-            FindGuestAdditions.RedirectStandardInput = true;
-            FindGuestAdditions.CreateNoWindow = true;
-
-            //The following programming statement was adapted from C-SharpCorner:
-            //Link: https://www.c-sharpcorner.com/UploadFile/2d2d83/how-to-start-a-process-like-cmd-window-using-C-Sharp/
-            //Author: Aman
-            //Author Profile Link:https://www.c-sharpcorner.com/members/aman2
-            Process StartSearch = new Process();
-
-            //The following programming statement was adapted from C-SharpCorner:
-            //Link: https://www.c-sharpcorner.com/UploadFile/2d2d83/how-to-start-a-process-like-cmd-window-using-C-Sharp/
-            //Author: Aman
-            //Author Profile Link:https://www.c-sharpcorner.com/members/aman2
-            StartSearch.StartInfo = FindGuestAdditions;
-
-
-            if (StartSearch.Start())
+            if (StartDeployment.Start())
             {
 
-                StartSearch.WaitForExit();
+                StartDeployment.WaitForExit();
 
-                if (StartSearch.ExitCode == 0)
+                //Removing modified iso
+                StartDeployment.StartInfo = UnmountISO;
+
+                StartDeployment.Start();
+
+                StartDeployment.WaitForExit();
+
+                if (StartDeployment.ExitCode == 0)
                 {
 
-                    IsGuestAdditionsPresent = true;
-
+                    IsSoftwareLoaded = true;
                 }
-                else if (StartSearch.ExitCode == 1)
+                else if(StartDeployment.ExitCode == 1)
                 {
-
-                    IsGuestAdditionsPresent = false;
+                    IsSoftwareLoaded = false;
                 }
+
             }
+        }
+
+        private void CheckAdditions()
+        {
+            if(PassedConfig.ElementAt(1) == "true")
+            {
+                ProcessStartInfo FindGuestAdditions = new ProcessStartInfo();
+
+                FindGuestAdditions.FileName = "cmd.exe";
+
+                FindGuestAdditions.WorkingDirectory = @"C:\PROGRA~1\Oracle\VirtualBox\";
+
+                FindGuestAdditions.Arguments = " /c dir VBoxGuestAdditions.iso /s";
+
+                FindGuestAdditions.RedirectStandardOutput = true;
+                FindGuestAdditions.UseShellExecute = false;
+                FindGuestAdditions.RedirectStandardInput = true;
+                FindGuestAdditions.CreateNoWindow = true;
+
+                ProcessStartInfo AddGuestAdditions = new ProcessStartInfo();
+
+                AddGuestAdditions.FileName = "cmd.exe";
+
+                AddGuestAdditions.WorkingDirectory = @"C:\PROGRA~1\Oracle\VirtualBox\";
+
+                AddGuestAdditions.Arguments = " /c VBoxManage storageattach "+PassedConfig.ElementAt(8)+ " --storagectl 'Disk-Controller' --port 0 --device 2 --type additions --medium @C:\\PROGRA~1\\Oracle\\VirtualBox\\VBoxGuestAdditions.iso";
+
+                AddGuestAdditions.RedirectStandardOutput = true;
+                AddGuestAdditions.UseShellExecute = false;
+                AddGuestAdditions.RedirectStandardInput = true;
+                AddGuestAdditions.CreateNoWindow = true;
+
+                Process StartSearch = new Process();
+
+                StartSearch.StartInfo = FindGuestAdditions;
+
+
+                if (StartSearch.Start())
+                {
+
+                    StartSearch.WaitForExit();
+
+                    if (StartSearch.ExitCode == 0)
+                    {
+
+                        IsGuestAdditionsPresent = true;
+
+                        //Adding Guest Additions
+                        StartSearch.StartInfo = FindGuestAdditions;
+
+                        StartSearch.Start();
+
+                        StartSearch.WaitForExit();
+
+                    }
+                    else if (StartSearch.ExitCode == 1)
+                    {
+
+                        IsGuestAdditionsPresent = false;
+
+                       // DownloadGuestAdditions();
+                    }
+                }
+
+            }
+           
 
 
         }
@@ -287,7 +329,7 @@ namespace Ms.Palmer
 
                 if (File.Exists(FileName) == false)
                 {
-                    ISODownloader.DownloadFile("http://download.virtualbox.org/virtualbox/7.0.8/VBoxGuestAdditions_7.0.8.iso", "VBoxGuestAdditions(Latest).iso");
+                    ISODownloader.DownloadFile("http://download.virtualbox.org/virtualbox/7.0.8/VBoxGuestAdditions_7.0.8.iso", "VBoxGuestAdditions.iso");
 
                     if (ISODownloader.IsBusy)
                     {

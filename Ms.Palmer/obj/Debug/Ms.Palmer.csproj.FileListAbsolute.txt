@@ -38,3 +38,25 @@ C:\Users\BraJo\Documents\GitHub\Ms.-Palmer\Ms.Palmer\obj\Debug\Ms.Palmer.exe
 C:\Users\BraJo\Documents\GitHub\Ms.-Palmer\Ms.Palmer\obj\Debug\Ms.Palmer.pdb
 C:\Users\BraJo\Documents\GitHub\Ms.-Palmer\Ms.Palmer\obj\Debug\Loading Config.g.cs
 C:\Users\BraJo\Documents\GitHub\Ms.-Palmer\Ms.Palmer\obj\Debug\Loading Config.baml
+C:\Users\Work\Documents\GitHub\Ms.-Palmer\Ms.Palmer\bin\Debug\Ms.Palmer.exe.config
+C:\Users\Work\Documents\GitHub\Ms.-Palmer\Ms.Palmer\bin\Debug\Ms.Palmer.exe
+C:\Users\Work\Documents\GitHub\Ms.-Palmer\Ms.Palmer\bin\Debug\Ms.Palmer.pdb
+C:\Users\Work\Documents\GitHub\Ms.-Palmer\Ms.Palmer\obj\Debug\Ms.Palmer.csproj.AssemblyReference.cache
+C:\Users\Work\Documents\GitHub\Ms.-Palmer\Ms.Palmer\obj\Debug\Ms.Palmer.csproj.SuggestedBindingRedirects.cache
+C:\Users\Work\Documents\GitHub\Ms.-Palmer\Ms.Palmer\obj\Debug\Loading Config.g.cs
+C:\Users\Work\Documents\GitHub\Ms.-Palmer\Ms.Palmer\obj\Debug\MainWindow.g.cs
+C:\Users\Work\Documents\GitHub\Ms.-Palmer\Ms.Palmer\obj\Debug\VM Config.g.cs
+C:\Users\Work\Documents\GitHub\Ms.-Palmer\Ms.Palmer\obj\Debug\VM Report.g.cs
+C:\Users\Work\Documents\GitHub\Ms.-Palmer\Ms.Palmer\obj\Debug\App.g.cs
+C:\Users\Work\Documents\GitHub\Ms.-Palmer\Ms.Palmer\obj\Debug\Ms.Palmer_MarkupCompile.cache
+C:\Users\Work\Documents\GitHub\Ms.-Palmer\Ms.Palmer\obj\Debug\Ms.Palmer_MarkupCompile.lref
+C:\Users\Work\Documents\GitHub\Ms.-Palmer\Ms.Palmer\obj\Debug\Loading Config.baml
+C:\Users\Work\Documents\GitHub\Ms.-Palmer\Ms.Palmer\obj\Debug\MainWindow.baml
+C:\Users\Work\Documents\GitHub\Ms.-Palmer\Ms.Palmer\obj\Debug\VM Config.baml
+C:\Users\Work\Documents\GitHub\Ms.-Palmer\Ms.Palmer\obj\Debug\VM Report.baml
+C:\Users\Work\Documents\GitHub\Ms.-Palmer\Ms.Palmer\obj\Debug\Ms.Palmer.g.resources
+C:\Users\Work\Documents\GitHub\Ms.-Palmer\Ms.Palmer\obj\Debug\Ms.Palmer.Properties.Resources.resources
+C:\Users\Work\Documents\GitHub\Ms.-Palmer\Ms.Palmer\obj\Debug\Ms.Palmer.csproj.GenerateResource.cache
+C:\Users\Work\Documents\GitHub\Ms.-Palmer\Ms.Palmer\obj\Debug\Ms.Palmer.csproj.CoreCompileInputs.cache
+C:\Users\Work\Documents\GitHub\Ms.-Palmer\Ms.Palmer\obj\Debug\Ms.Palmer.exe
+C:\Users\Work\Documents\GitHub\Ms.-Palmer\Ms.Palmer\obj\Debug\Ms.Palmer.pdb
