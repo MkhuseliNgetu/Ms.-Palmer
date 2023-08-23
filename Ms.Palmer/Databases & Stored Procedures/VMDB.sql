@@ -4,7 +4,7 @@ CREATE DATABASE VirtualMachineConfigurations;
 USE VirtualMachineConfigurations; 
 
 CREATE TABLE VMConfigurations (
-UseCase VARCHAR (10) NOT NULL PRIMARY KEY,
+UseCase VARCHAR (10) NOT NULL,
 OperatingSystem VARCHAR (15) NOT NULL,
 Size INT NOT NULL,
 OperatingSystemLicense VARCHAR (30) NULL,
