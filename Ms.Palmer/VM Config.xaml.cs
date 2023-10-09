@@ -3,21 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+
+
 
 namespace Ms.Palmer
 {
@@ -26,40 +17,76 @@ namespace Ms.Palmer
     /// </summary>
     /// 
     public partial class VM_Config : Window
-    {
-
-
-
+    {   //General
         private String[] OperatingSystems = new string[5];
         private int[] DefaultVMSizes = new int[5];
         private bool IsGuestAddtionsSet;
-
-      
         public Stack<String> VM;
-
+        //UI Related
         private OpenFileDialog FindISOLocally;
         private Nullable<bool> IsWindowOpened;
-
         private LoadingConfig DeployVMConfig;
+        //Database Related
+        private SqlConnection AccessDB;
+        private SqlCommand AddToDB;
+        private SqlParameter UseCase;
+        private SqlParameter OS;
+        private SqlParameter Size;
+        private SqlParameter OSLicense;
+        private SqlParameter GuestAdditions;
         private DataTable MLSuggestedConfig;
-        private String ConnectionToDatabase;
+        private DataTable LocalSuggestedConfig;
+        private DataRow Content;
+        private string ConnectionToDatabase;
         private string SelectedUseCase;
         public VM_Config(String VMUseCase)
         {
             InitializeComponent();
 
+           
             SelectedUseCase = VMUseCase;
 
             SetName(SelectedUseCase);
 
-           
+
+
         }
-       
+        //ML.Net
+        //The VMConfigPrediction is used to predict the size (In Mb) for the virtual machine.
+        private void PredictVMSize()
+        {
+            //Load sample data
+            //var sampleData = new VMConfigPrediction.ModelInput()
+            //{
+            //    UseCase = @"Education",
+            //    OperatingSystem = @"Ubuntu",
+            //    OperatingSystemLicense = @"N/A",
+            //    GuestAdditions = false,
+            //};
+
+            //Load model and predict output
+            //var result = VMConfigPrediction.Predict(sampleData);
+
+        }
+        //The VMConfigurationOperatingSystemPredictionModel is used to predict the operating system of the virtual machine based on the use case.
+        private void PredictVMOS()
+        {
+            //Load sample data
+            //var sampleData = new VMConfigurationOperatingSystemPredictionModel.ModelInput()
+            //{
+            //    UseCase = @"Education",
+            //    OperatingSystem = @"Ubuntu",
+            //    OperatingSystemLicense = @"N/A",
+            //    GuestAdditions = false,
+            //};
+
+            //Load model and predict output
+            //var result = VMConfigurationOperatingSystemPredictionModel.Predict(sampleData);
+
+        }
 
         public Stack<String> SetOS(string OperatingSystem)
         {
-
-          
             if (OperatingSystem != null)
             {
                 VM.Push(OperatingSystem);
@@ -286,6 +313,7 @@ namespace Ms.Palmer
                     }
 
                     AddPostInstallScript(SelectedUseCase);
+                    StoreConfigOffsite();
                     break;
                 case "Ubuntu":
 
@@ -311,6 +339,7 @@ namespace Ms.Palmer
                     }
 
                     AddPostInstallScript(SelectedUseCase);
+                    StoreConfigOffsite();
                     break;
                 case "Fedora":
 
@@ -336,6 +365,7 @@ namespace Ms.Palmer
                     }
 
                     AddPostInstallScript(SelectedUseCase);
+                    StoreConfigOffsite();
                     break;
                 case "Pop OS":
 
@@ -361,6 +391,7 @@ namespace Ms.Palmer
                     }
 
                     AddPostInstallScript(SelectedUseCase);
+                    StoreConfigOffsite();
                     break;
                 case "Linux Mint":
 
@@ -386,6 +417,7 @@ namespace Ms.Palmer
                     }
 
                     AddPostInstallScript(SelectedUseCase);
+                    StoreConfigOffsite();
                     break;
 
             }
@@ -399,35 +431,35 @@ namespace Ms.Palmer
 
         private void StoreConfigOffsite()
         {
-            using (SqlConnection AccessDB = new SqlConnection(ConnectionToDatabase))
+            using (AccessDB = new SqlConnection(ConnectionToDatabase))
             {
-                SqlCommand AddToDB = new SqlCommand("AddConfig");
+                AddToDB = new SqlCommand("SP_AddConfig");
                 AddToDB.CommandType = CommandType.StoredProcedure;
 
-                SqlParameter UseCase = new SqlParameter();
+                UseCase = new SqlParameter();
                 UseCase.ParameterName = "@UseCase";
                 UseCase.SqlDbType = SqlDbType.VarChar;
                 UseCase.Size = 10;
                 UseCase.Value = this.SelectedUseCase;
 
-                SqlParameter OS = new SqlParameter();
+                OS = new SqlParameter();
                 OS.ParameterName = "@OperatingSystem";
                 OS.SqlDbType = SqlDbType.VarChar;
                 OS.Size = 15;
                 OS.Value = VM.ElementAt(5);
 
-                SqlParameter Size = new SqlParameter();
+                Size = new SqlParameter();
                 Size.ParameterName = "@Size";
                 Size.SqlDbType = SqlDbType.Int;
                 Size.Value = int.Parse(VMSize.SelectedItem.ToString());
 
-                SqlParameter OSLicense = new SqlParameter();
+                OSLicense = new SqlParameter();
                 OSLicense.ParameterName = "@OperatingSystemLicense";
                 OSLicense.SqlDbType = SqlDbType.VarChar;
                 OSLicense.Size = 30;
                 OSLicense.Value = VM.ElementAt(1);
 
-                SqlParameter GuestAdditions = new SqlParameter();
+                GuestAdditions = new SqlParameter();
                 GuestAdditions.ParameterName = "@GuestAdditions";
                 GuestAdditions.SqlDbType = SqlDbType.Bit;
                 GuestAdditions.Value = VM.ElementAt(0);
@@ -448,6 +480,7 @@ namespace Ms.Palmer
 
             }
         }
+        //ML
         private DataTable SetupDataTable()
         {
             MLSuggestedConfig = new DataTable();
@@ -456,40 +489,97 @@ namespace Ms.Palmer
             MLSuggestedConfig.Columns.Add(new DataColumn("OS", typeof(String)));
             MLSuggestedConfig.Columns.Add(new DataColumn("Size", typeof(int)));
             MLSuggestedConfig.Columns.Add(new DataColumn("OS License", typeof(String)));
-            MLSuggestedConfig.Columns.Add(new DataColumn("Guest Additions", typeof(Boolean)));
-
-          
+            MLSuggestedConfig.Columns.Add(new DataColumn("Guest Additions", typeof(int)));
 
 
-            return MLSuggestedConfig;
+            LocalSuggestedConfig = new DataTable();
+
+            LocalSuggestedConfig.Columns.Add(new DataColumn("Use Case", typeof(String)));
+            LocalSuggestedConfig.Columns.Add(new DataColumn("OS", typeof(String)));
+            LocalSuggestedConfig.Columns.Add(new DataColumn("Size", typeof(int)));
+            LocalSuggestedConfig.Columns.Add(new DataColumn("OS License", typeof(String)));
+            LocalSuggestedConfig.Columns.Add(new DataColumn("Guest Additions", typeof(int)));
+
+            return LocalSuggestedConfig;
         }
 
         private DataTable AddConfigData()
         {
-            DataRow Content = MLSuggestedConfig.NewRow();
+            using (AccessDB = new SqlConnection(ConnectionToDatabase))
+            {
+                AccessDB.Open();
 
+                if (AccessDB.State== ConnectionState.Open)
+                {
+                    Content = LocalSuggestedConfig.NewRow();
+
+                    String GetConfigs = "SELECT * FROM VMConfigurations WHERE UseCase ='"+SelectedUseCase+"'";
+
+                    using(SqlCommand GetVMConfigs = new SqlCommand(GetConfigs, AccessDB))
+                    {
+                        GetVMConfigs.CommandType = CommandType.Text;
+
+                        using (SqlDataAdapter DownloadVMConfigs = new SqlDataAdapter(GetVMConfigs))
+                        {
+                            if (LocalSuggestedConfig.Rows.Count == 0)
+                            {
+                                DownloadVMConfigs.Fill(LocalSuggestedConfig);
+                            }
+                            else 
+                            {
+                                AccessDB.Close();
+                            }
+                            
+                        }
+
+                    }
+                    
+                }
+                else if(AccessDB.State == ConnectionState.Closed || AccessDB.State == ConnectionState.Broken)
+                {
+                    Content = MLSuggestedConfig.NewRow();
+                }
+                
+            }
             return MLSuggestedConfig;
         }
 
         private void DisplaySuggestedConfig()
         {
-           
+           if(MLSuggestedConfig.Columns.Count!=0 && MLSuggestedConfig.Rows.Count != 0)
+            {
                 foreach (DataColumn Header in MLSuggestedConfig.Columns)
                 {
-                     foreach (DataRow Content in MLSuggestedConfig.Rows)
-                     {
+                    foreach (DataRow Content in MLSuggestedConfig.Rows)
+                    {
 
-                        SuggestedVMConfigView.Items.Add(Header +": "+ Content);
+                        SuggestedVMConfigView.Items.Add(Header + ": " + Content);
 
-                     }
+                    }
                 }
+
+            }
+            else if (LocalSuggestedConfig.Columns.Count != 0 && LocalSuggestedConfig.Rows.Count != 0)
+            {
+                foreach (DataColumn Header in LocalSuggestedConfig.Columns)
+                {
+                    foreach (DataRow Content in LocalSuggestedConfig.Rows)
+                    {
+
+                        SuggestedVMConfigView.Items.Add(Header + ": " + Content);
+
+                    }
+                }
+            }
+           
         }
 
         private void SuggestedVMConfigView_Initialized(object sender, EventArgs e)
         {
-
+            ConnectionToDatabase = "Server=tcp:diamonddogs.database.windows.net,1433;Initial Catalog=VirtualMachineConfigurations;Persist Security Info=False;User ID=brajo;Password=!H6K@z@j9A}+y>E;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
             SetupDataTable();
-            //DisplaySuggestedConfig();
+            AddConfigData();
+            DisplaySuggestedConfig();
 
         }
 
